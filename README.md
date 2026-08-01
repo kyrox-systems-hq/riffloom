@@ -14,6 +14,7 @@ GitHub Pages deployment is configured from the `main` branch.
 - Violin: `https://kyrox-systems-hq.github.io/riffloom/violin.html`
 - Tabla: `https://kyrox-systems-hq.github.io/riffloom/tabla.html`
 - Trumpet: `https://kyrox-systems-hq.github.io/riffloom/trumpet.html`
+- Alto saxophone: `https://kyrox-systems-hq.github.io/riffloom/saxophone.html`
 
 If the links are not live yet, enable **GitHub Actions** as the Pages publishing source in the repository settings. The deployment workflow is in `.github/workflows/pages.yml`.
 
@@ -84,9 +85,24 @@ Open [`trumpet.html`](trumpet.html).
 - Assisted and Free lip modes
 - Hold and Latch accessibility modes
 - concert and B-flat written note displays
-- continuous brass synthesis and output metering
 
 See [`docs/TRUMPET-PROTOTYPE.md`](docs/TRUMPET-PROTOTYPE.md).
+
+### Alto saxophone and single-reed engine, Phase 1
+
+Open [`saxophone.html`](saxophone.html).
+
+- left-thumb AIR rail and independent TONGUE strip
+- two-dimensional REED field for bends, vibrato, brightness and subtone
+- six large main stack keys for the two hands
+- separate octave, palm, side and low-register auxiliary bank
+- Assisted and Exact fingering modes
+- Hold and Latch key and air modes
+- written low B-flat 3 through palm F6
+- concert and E-flat written note displays
+- continuous single-reed synthesis and output metering
+
+See [`docs/SAXOPHONE-PROTOTYPE.md`](docs/SAXOPHONE-PROTOTYPE.md).
 
 ## Run locally
 
@@ -107,6 +123,7 @@ No build step is required.
    - `http://localhost:8080/violin.html` for violin
    - `http://localhost:8080/tabla.html` for tabla
    - `http://localhost:8080/trumpet.html` for trumpet
+   - `http://localhost:8080/saxophone.html` for alto saxophone
 
 4. Use a phone in landscape orientation for the intended layouts.
 
@@ -120,7 +137,7 @@ The instrument models have dependency-free Node tests:
 npm test
 ```
 
-The suite validates guitar fretting, drum timing and looping, violin pitch behaviour, tabla stroke logic, and trumpet harmonic, valve, air and note-display behaviour.
+The suite validates guitar fretting, drum timing and looping, violin pitch behaviour, tabla stroke logic, trumpet harmonic and valve behaviour, and saxophone stack, octave, palm, low-register, transposition and fingering modes.
 
 ## Product and instrument planning
 
@@ -138,20 +155,22 @@ riffloom/
 ├── violin.html
 ├── tabla.html
 ├── trumpet.html
+├── saxophone.html
 ├── styles and entry scripts
 ├── instruments/
 │   ├── guitar/
 │   ├── drums/
 │   ├── violin/
 │   ├── tabla/
-│   └── trumpet/
-│       ├── trumpet-model.js
+│   ├── trumpet/
+│   └── saxophone/
+│       ├── saxophone-model.js
 │       ├── sound-engine.js
-│       ├── trumpet-ui.js
+│       ├── saxophone-ui.js
 │       ├── gesture-controller.js
 │       ├── main.js
 │       └── tests/
-│           └── trumpet-model.test.mjs
+│           └── saxophone-model.test.mjs
 ├── docs/
 │   ├── PRODUCT-PLAN.md
 │   ├── INSTRUMENT-ROADMAP.md
@@ -173,7 +192,8 @@ Useful early contributions include:
 - measuring audible performance through speakers and headphones
 - identifying missed, stuck or incorrectly released notes and hits
 - reviewing instrument mappings with experienced musicians and teachers
-- testing the trumpet five-finger layout, valve combinations, lip slurs and repeated tonguing
+- testing the trumpet five-finger layout and repeated tonguing
+- testing the saxophone six-key stack, auxiliary bank, octave key and reed field
 - improving accessibility without reducing playability
 
 ## Licence

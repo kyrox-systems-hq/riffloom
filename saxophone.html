@@ -1,0 +1,103 @@
+<!-- This Source Code Form is subject to the terms of the Mozilla Public
+   - License, v. 2.0. If a copy of the MPL was not distributed with this
+   - file, You can obtain one at https://mozilla.org/MPL/2.0/. -->
+<!doctype html>
+<html lang="en-GB">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#0d1117">
+  <meta name="description" content="Riffloom phone-native alto saxophone prototype with continuous air, reed control and a two-hand key layout.">
+  <title>Riffloom Alto Saxophone Prototype</title>
+  <link rel="stylesheet" href="saxophone.css">
+</head>
+<body>
+  <main class="app-shell">
+    <header class="app-header">
+      <div>
+        <p class="eyebrow">Riffloom prototype 0.8</p>
+        <h1>Phone-native alto saxophone</h1>
+        <p class="subtitle">Hold air and embouchure with the left hand while the right and left fingers operate a compact stack, octave, palm, side and low-register key system.</p>
+      </div>
+
+      <div class="header-side">
+        <nav class="instrument-nav" aria-label="Instrument prototypes">
+          <a href="index.html">Piano</a><a href="guitar.html">Guitar</a><a href="drums.html">Drums</a><a href="violin.html">Violin</a><a href="tabla.html">Tabla</a><a href="trumpet.html">Trumpet</a><a href="saxophone.html" aria-current="page">Sax</a>
+        </nav>
+        <div class="header-controls" aria-label="Saxophone settings">
+          <label><span>Fingering</span><select id="fingeringMode"><option value="assisted" selected>Assisted</option><option value="exact">Exact</option></select></label>
+          <label><span>Keys</span><select id="keyMode"><option value="hold" selected>Hold</option><option value="latch">Latch</option></select></label>
+          <label><span>Air</span><select id="airMode"><option value="hold" selected>Hold</option><option value="latch">Latch</option></select></label>
+          <label><span>Notes</span><select id="noteDisplay"><option value="concert" selected>Concert</option><option value="written">E♭ written</option></select></label>
+          <label><span>Reed bend</span><select id="bendRange"><option value="0.5">±0.5</option><option value="1">±1</option><option value="2" selected>±2</option><option value="4">±4</option></select></label>
+          <label class="toggle-row"><input id="labelsToggle" type="checkbox" checked><span>Labels</span></label>
+        </div>
+      </div>
+    </header>
+
+    <section class="instrument-panel" aria-labelledby="instrument-heading">
+      <h2 id="instrument-heading" class="sr-only">Playable alto saxophone</h2>
+      <div id="saxPhone" aria-label="Landscape phone alto saxophone interface">
+        <div id="airRail" role="slider" aria-label="Air pressure. Move upwards for stronger breath." aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
+          <strong>AIR</strong><span>strong</span><div class="air-track"><div id="airFill"></div><div id="airThumb"></div></div><span>soft</span><button type="button" id="airOff">OFF</button>
+        </div>
+
+        <div id="mouthColumn">
+          <div id="reedField" role="application" aria-label="Reed and embouchure field">
+            <div class="reed-axis top">BRIGHT · FIRM</div><div class="reed-axis bottom">DARK · SUBTONE</div><div class="reed-axis left">FLAT</div><div class="reed-axis right">SHARP</div>
+            <div class="reed-centre vertical"></div><div class="reed-centre horizontal"></div><div id="reedMarker"></div>
+          </div>
+          <button type="button" id="tongueStrip"><strong>TONGUE</strong><span>re-articulate under one breath</span></button>
+        </div>
+
+        <div id="stackBank" aria-label="Six main saxophone stack keys">
+          <div class="hand-column"><div class="hand-title">LEFT HAND</div>
+            <button type="button" class="sax-key main-key" data-sax-key="L1"><b>L1</b><span>B key</span></button>
+            <button type="button" class="sax-key main-key" data-sax-key="L2"><b>L2</b><span>A key</span></button>
+            <button type="button" class="sax-key main-key" data-sax-key="L3"><b>L3</b><span>G key</span></button>
+          </div>
+          <div class="hand-column"><div class="hand-title">RIGHT HAND</div>
+            <button type="button" class="sax-key main-key" data-sax-key="R1"><b>R1</b><span>F key</span></button>
+            <button type="button" class="sax-key main-key" data-sax-key="R2"><b>R2</b><span>E key</span></button>
+            <button type="button" class="sax-key main-key" data-sax-key="R3"><b>R3</b><span>D key</span></button>
+          </div>
+        </div>
+
+        <div id="auxBank" aria-label="Octave, palm, side and low saxophone keys">
+          <button type="button" class="sax-key octave-key" data-sax-key="OCT"><b>OCTAVE</b><span>left thumb</span></button>
+          <div class="aux-section"><div class="aux-title">PALM</div><div class="aux-grid three">
+            <button type="button" class="sax-key" data-sax-key="PALM_D">D</button><button type="button" class="sax-key" data-sax-key="PALM_E">E</button><button type="button" class="sax-key" data-sax-key="PALM_F">F</button>
+          </div></div>
+          <div class="aux-section"><div class="aux-title">LEFT PINKY</div><div class="aux-grid four">
+            <button type="button" class="sax-key" data-sax-key="GSHARP">G♯</button><button type="button" class="sax-key" data-sax-key="LOW_CSHARP">low C♯</button><button type="button" class="sax-key" data-sax-key="LOW_B">low B</button><button type="button" class="sax-key" data-sax-key="LOW_BB">low B♭</button>
+          </div></div>
+          <div class="aux-section"><div class="aux-title">RIGHT · SIDE</div><div class="aux-grid four">
+            <button type="button" class="sax-key" data-sax-key="LOW_C">low C</button><button type="button" class="sax-key" data-sax-key="LOW_EB">E♭</button><button type="button" class="sax-key" data-sax-key="SIDE_BB">side B♭</button><button type="button" class="sax-key" data-sax-key="SIDE_C">side C</button>
+          </div></div>
+          <button type="button" class="sax-key bis-key" data-sax-key="BIS"><b>BIS B♭</b></button>
+        </div>
+      </div>
+    </section>
+
+    <section class="control-panel" aria-labelledby="phase-heading">
+      <div class="section-heading"><div><p class="eyebrow">Single-reed engine, Phase 1</p><h2 id="phase-heading">A dense key system without a miniature saxophone</h2></div><p>The six main keys remain large enough for six fingers. Octave, palm, side and low-register keys sit in a separate thumb and pinky bank. Assisted mode resolves the nearest supported fingering while Exact mode requires a recognised combination.</p></div>
+      <div class="control-groups"><div><h3>Diagnostics</h3><div class="button-row"><button type="button" id="testScale">Test written D to C♯</button><button type="button" id="testLow">Test low register</button><button type="button" id="testPalm">Test palm register</button></div></div><div><h3>Reset</h3><div class="button-row"><button type="button" id="clearKeys">Clear keys</button><button type="button" id="stopSax">Stop sound</button></div></div></div>
+      <div class="metric-grid">
+        <article class="metric wide"><span>Current note</span><strong id="currentNote">E4 concert</strong></article>
+        <article class="metric"><span>Fingering</span><strong id="fingeringStatus">Open C♯</strong></article>
+        <article class="metric"><span>Active keys</span><strong id="activeKeys">Open</strong></article>
+        <article class="metric"><span>Air</span><strong id="airStatus">0%</strong></article>
+        <article class="metric"><span>Reed</span><strong id="reedStatus">Centre</strong></article>
+        <article class="metric"><span>Technique</span><strong id="techniqueStatus">Ready</strong></article>
+        <article class="metric"><span>Audio</span><strong id="audioStatus">Locked</strong></article>
+      </div>
+      <div id="noteHistory" aria-label="Recent saxophone notes"><span>Recent notes appear here</span></div>
+      <div class="meter-block"><div class="meter-label"><span>Output signal</span><span>Live single-reed voice</span></div><div id="meter" role="meter" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><div id="level"></div></div></div>
+      <div id="report" class="report" aria-live="polite">Hold AIR with the left thumb, REED with another left finger and the key bank with the remaining fingers. Tap TONGUE to start another attack without changing the fingering or ending the air stream.</div>
+    </section>
+
+    <footer><span>E♭ alto saxophone · written low B♭3 to palm F6 in Phase 1</span><span>Concert pitch sounds nine semitones below written notation</span></footer>
+  </main>
+  <script type="module" src="saxophone.js"></script>
+</body>
+</html>

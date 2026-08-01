@@ -1,8 +1,8 @@
 # Riffloom Instrument Roadmap
 
 **Status:** Execution companion to `PRODUCT-PLAN.md`  
-**Version:** 0.3  
-**Serial:** RFL-IR-260801-2031-03  
+**Version:** 0.4  
+**Serial:** RFL-IR-260801-2059-04  
 **Last updated:** 1 August 2026
 
 ## Relationship to the product plan
@@ -72,49 +72,55 @@ The foundation covers separate dayan and bayan surfaces, common Phase 1 bols, co
 
 Later tabla work should add teacher-verified stroke maps, additional bols, taal and theka practice, lehra accompaniment and professional tabla audio.
 
-## Active build: brass interface
+### Brass engine
 
-### Trumpet Phase 1
+Current Phase 1 prototype:
 
-The trumpet engine establishes a new wind-instrument screen model:
+- B-flat trumpet
+
+The trumpet foundation establishes:
 
 - a separate AIR rail for breath pressure, dynamics and note continuity
 - a two-dimensional LIP field for harmonic register, lip slurs and continuous pitch
 - a dedicated TONGUE strip for repeated articulation under one breath
-- three independent full-height valve strips
+- three independent valve strips
 - Assisted and Free lip modes
-- Hold and Latch accessibility modes
 - concert and B-flat written note displays
-- structured valve, air, pitch and articulation state
 
-The five-finger landscape layout is the primary experiment. The left thumb controls air, another left finger controls embouchure, and the right hand controls the three valves.
+Planned derivatives:
 
-### Brass derivatives
-
-After trumpet validation, reuse the breath and embouchure foundation for:
-
-1. cornet
-2. French horn
-3. trombone
-4. tuba
+- cornet
+- French horn
+- trombone
+- tuba
 
 Trombone needs a continuous slide layer. French horn needs hand-in-bell and different harmonic behaviour. Tuba needs lower-register air and tubing behaviour.
 
-## Next wind-interface comparison
+### Single-reed engine
 
-### Saxophone
+Current Phase 1 prototype:
 
-Saxophone should be the next wind interface after trumpet because it reuses air and tonguing while replacing the three-valve bank with a larger key and fingering system.
+- E-flat alto saxophone
 
-The saxophone prototype should test:
+The saxophone foundation keeps AIR and TONGUE from the brass experiment but replaces the trumpet valve bank with:
 
-- a compact key layout rather than a literal miniature saxophone
-- octave-key behaviour
-- continuous breath and tonguing
-- normal, subtone and overblown registers
-- pitch bends, vibrato, falls and growls later
-- alternate fingering support
-- a reusable single-reed engine for clarinet
+- six large main stack keys
+- a separate octave key
+- palm D, E and F keys
+- left and right pinky low-register keys
+- Bis and side alternatives
+- a two-dimensional REED field for bends, vibrato, brightness and subtone
+- Assisted and Exact fingering modes
+- concert and E-flat written note displays
+
+The first supported written range runs from low B-flat 3 to palm F6. The fingering database is intentionally incomplete and must expand after real-device and musician testing.
+
+Planned single-reed derivatives:
+
+- clarinet
+- tenor saxophone
+- soprano saxophone
+- baritone saxophone
 
 ## Plucked regional-string family
 
@@ -124,14 +130,7 @@ Rabab remains planned and has been deferred rather than removed.
 
 The first rabab implementation should clearly state which tradition and tuning it represents. It should reuse suitable guitar foundations while adding plectrum-led attacks, melody and drone strings, sympathetic resonance where applicable, rapid repeated picking, slides, ornaments and a distinct body response.
 
-## Woodwind and reed families
-
-### Single-reed engine
-
-Planned instruments:
-
-- saxophone
-- clarinet
+## Double-reed and air-jet families
 
 ### Double-reed engine
 
@@ -155,8 +154,8 @@ Shehnai must receive its own ornamentation, tuning and timbral model rather than
 
 1. validate violin Phase 1
 2. validate tabla Phase 1
-3. trumpet Phase 1
-4. saxophone interface prototype
+3. validate trumpet Phase 1
+4. validate alto saxophone Phase 1 and compare it with the trumpet screen model
 5. rabab
 6. viola, cello, double bass and sarangi adaptations
 7. bass guitar
