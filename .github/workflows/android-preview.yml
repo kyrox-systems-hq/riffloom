@@ -1,0 +1,114 @@
+name: Build Android Preview
+
+on:
+  pull_request:
+    paths:
+      - "android/**"
+      - "mobile.html"
+      - "mobile.css"
+      - "mobile.js"
+      - "*.html"
+      - "*.css"
+      - "*.js"
+      - "instruments/**"
+      - "package.json"
+      - ".github/workflows/android-preview.yml"
+  push:
+    branches: [main]
+    paths:
+      - "android/**"
+      - "mobile.html"
+      - "mobile.css"
+      - "mobile.js"
+      - "*.html"
+      - "*.css"
+      - "*.js"
+      - "instruments/**"
+      - "package.json"
+      - ".github/workflows/android-preview.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: android-preview-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Set up Java 17
+        uses: actions/setup-java@v5
+        with:
+          distribution: temurin
+          java-version: "17"
+
+      - name: Set up Gradle 8.9
+        uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: "8.9"
+
+      - name: Set up Android SDK
+        uses: android-actions/setup-android@v3
+
+      - name: Install Android platform and build tools
+        run: sdkmanager "platforms;android-35" "build-tools;35.0.0"
+
+      - name: Run instrument model tests
+        run: npm test
+
+      - name: Restore preview signing key
+        run: |
+          base64 --decode android/preview-signing.keystore.b64 > android/app/riffloom-preview.jks
+          keytool -list \
+            -keystore android/app/riffloom-preview.jks \
+            -storepass riffloom-preview-only \
+            -alias riffloom-preview
+
+      - name: Build signed preview APK
+        run: |
+          gradle -p android :app:assembleDebug \
+            -PpreviewVersionCode="${{ github.run_number }}" \
+            -PpreviewVersionName="0.1.${{ github.run_number }}-preview" \
+            --no-daemon \
+            --stacktrace
+
+      - name: Verify and name APK
+        run: |
+          mkdir -p release
+          APK="android/app/build/outputs/apk/debug/app-debug.apk"
+          "$ANDROID_HOME/build-tools/35.0.0/apksigner" verify --verbose "$APK"
+          "$ANDROID_HOME/build-tools/35.0.0/aapt" dump badging "$APK" | tee release/apk-badging.txt
+          cp "$APK" release/Riffloom-Android-Preview.apk
+          sha256sum release/Riffloom-Android-Preview.apk > release/Riffloom-Android-Preview.apk.sha256
+
+      - name: Upload workflow artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: riffloom-android-preview-${{ github.run_number }}
+          path: |
+            release/Riffloom-Android-Preview.apk
+            release/Riffloom-Android-Preview.apk.sha256
+            release/apk-badging.txt
+          if-no-files-found: error
+          retention-days: 30
+
+      - name: Publish rolling preview release
+        if: github.event_name != 'pull_request'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release delete android-preview --yes --cleanup-tag || true
+          gh release create android-preview \
+            release/Riffloom-Android-Preview.apk \
+            release/Riffloom-Android-Preview.apk.sha256 \
+            --target "$GITHUB_SHA" \
+            --prerelease \
+            --title "Riffloom Android Preview" \
+            --notes "Automatically built installable Android preview containing the current offline Riffloom instruments. Package: com.kyroxsystems.riffloom.preview. This public preview signing key must never be used for a production Play Store build."
