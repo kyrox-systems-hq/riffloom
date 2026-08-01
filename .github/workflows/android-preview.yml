@@ -1,0 +1,115 @@
+name: Build Android Preview
+
+on:
+  pull_request:
+    paths:
+      - "android/**"
+      - "mobile.html"
+      - "mobile.css"
+      - "mobile.js"
+      - "*.html"
+      - "*.css"
+      - "*.js"
+      - "instruments/**"
+      - "package.json"
+      - ".github/workflows/android-preview.yml"
+  push:
+    branches: [main]
+    paths:
+      - "android/**"
+      - "mobile.html"
+      - "mobile.css"
+      - "mobile.js"
+      - "*.html"
+      - "*.css"
+      - "*.js"
+      - "instruments/**"
+      - "package.json"
+      - ".github/workflows/android-preview.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: android-preview-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out repository without external actions
+        env:
+          REPOSITORY: ${{ github.repository }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+        run: |
+          git init .
+          git remote add origin "https://github.com/${REPOSITORY}.git"
+          if [ "$GITHUB_EVENT_NAME" = "pull_request" ]; then
+            git fetch --depth=1 origin "refs/pull/${PR_NUMBER}/merge"
+          else
+            git fetch --depth=1 origin "$GITHUB_SHA"
+          fi
+          git checkout --detach FETCH_HEAD
+
+      - name: Select Java 17
+        run: |
+          echo "JAVA_HOME=$JAVA_HOME_17_X64" >> "$GITHUB_ENV"
+          echo "$JAVA_HOME_17_X64/bin" >> "$GITHUB_PATH"
+          "$JAVA_HOME_17_X64/bin/java" -version
+
+      - name: Install Gradle 8.9
+        run: |
+          curl -fsSL https://services.gradle.org/distributions/gradle-8.9-bin.zip -o /tmp/gradle-8.9-bin.zip
+          unzip -q /tmp/gradle-8.9-bin.zip -d "$HOME/.local"
+          echo "$HOME/.local/gradle-8.9/bin" >> "$GITHUB_PATH"
+
+      - name: Install Android platform and build tools
+        run: |
+          yes | sdkmanager --licenses >/dev/null || true
+          sdkmanager "platforms;android-35" "build-tools;35.0.0"
+
+      - name: Run instrument model tests
+        run: npm test
+
+      - name: Restore preview signing key
+        run: |
+          base64 --decode android/preview-signing.keystore.b64 > android/app/riffloom-preview.jks
+          keytool -list \
+            -keystore android/app/riffloom-preview.jks \
+            -storepass riffloom-preview-only \
+            -alias riffloom-preview
+
+      - name: Build signed preview APK
+        run: |
+          gradle -p android :app:assembleDebug \
+            -PpreviewVersionCode="${{ github.run_number }}" \
+            -PpreviewVersionName="0.1.${{ github.run_number }}-preview" \
+            --no-daemon \
+            --stacktrace
+
+      - name: Verify and name APK
+        run: |
+          mkdir -p release
+          APK="android/app/build/outputs/apk/debug/app-debug.apk"
+          "$ANDROID_HOME/build-tools/35.0.0/apksigner" verify --verbose "$APK"
+          "$ANDROID_HOME/build-tools/35.0.0/aapt" dump badging "$APK" | tee release/apk-badging.txt
+          cp "$APK" release/Riffloom-Android-Preview.apk
+          sha256sum release/Riffloom-Android-Preview.apk > release/Riffloom-Android-Preview.apk.sha256
+
+      - name: Publish rolling preview release
+        if: github.event_name != 'pull_request'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release delete android-preview --yes --cleanup-tag || true
+          gh release create android-preview \
+            release/Riffloom-Android-Preview.apk \
+            release/Riffloom-Android-Preview.apk.sha256 \
+            release/apk-badging.txt \
+            --target "$GITHUB_SHA" \
+            --prerelease \
+            --title "Riffloom Android Preview" \
+            --notes "Automatically built installable Android preview containing the current offline Riffloom instruments. Package: com.kyroxsystems.riffloom.preview. This public preview signing key must never be used for a production Play Store build."

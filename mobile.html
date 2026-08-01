@@ -1,0 +1,80 @@
+<!-- This Source Code Form is subject to the terms of the Mozilla Public
+   - License, v. 2.0. If a copy of the MPL was not distributed with this
+   - file, You can obtain one at https://mozilla.org/MPL/2.0/. -->
+<!doctype html>
+<html lang="en-GB">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#070a0f">
+  <meta name="description" content="Riffloom Android preview instrument launcher.">
+  <title>Riffloom Preview</title>
+  <link rel="stylesheet" href="mobile.css">
+</head>
+<body>
+  <main class="launcher-shell">
+    <header class="launcher-header">
+      <div>
+        <p class="eyebrow">Riffloom Android preview</p>
+        <h1>Choose an instrument</h1>
+        <p class="subtitle">Seven offline touchscreen prototypes in one preliminary app. Use the phone in landscape orientation and test with headphones as well as the built-in speaker.</p>
+      </div>
+      <div class="header-actions">
+        <button id="fullscreenButton" type="button">Full screen</button>
+        <a id="continueButton" class="continue-button hidden" href="index.html">Continue last instrument</a>
+      </div>
+    </header>
+
+    <section class="instrument-grid" aria-label="Available instruments">
+      <a class="instrument-card" href="index.html" data-instrument="Piano">
+        <span class="card-number">01</span>
+        <div><h2>Piano</h2><p>All 88 keys, folded into three landscape rows with sustain controls.</p></div>
+        <span class="open-label">Open</span>
+      </a>
+
+      <a class="instrument-card" href="guitar.html" data-instrument="Guitar">
+        <span class="card-number">02</span>
+        <div><h2>Guitar</h2><p>Fretting, strumming, slides, bends, vibrato and palm muting.</p></div>
+        <span class="open-label">Open</span>
+      </a>
+
+      <a class="instrument-card" href="drums.html" data-instrument="Drums">
+        <span class="card-number">03</span>
+        <div><h2>Drums and looper</h2><p>Eight expressive surfaces with fills, rolls, choking and overdubbing.</p></div>
+        <span class="open-label">Open</span>
+      </a>
+
+      <a class="instrument-card" href="violin.html" data-instrument="Violin">
+        <span class="card-number">04</span>
+        <div><h2>Violin</h2><p>Continuous fingerboard pitch, bowing, double stops and pizzicato.</p></div>
+        <span class="open-label">Open</span>
+      </a>
+
+      <a class="instrument-card" href="tabla.html" data-instrument="Tabla">
+        <span class="card-number">05</span>
+        <div><h2>Tabla</h2><p>Dayan and bayan bols with heel-controlled continuous bass pitch.</p></div>
+        <span class="open-label">Open</span>
+      </a>
+
+      <a class="instrument-card" href="trumpet.html" data-instrument="Trumpet">
+        <span class="card-number">06</span>
+        <div><h2>Trumpet</h2><p>Air, lip, tongue and three-valve multi-touch performance.</p></div>
+        <span class="open-label">Open</span>
+      </a>
+
+      <a class="instrument-card" href="saxophone.html" data-instrument="Alto saxophone">
+        <span class="card-number">07</span>
+        <div><h2>Alto saxophone</h2><p>Air, reed expression and a compact two-hand key system.</p></div>
+        <span class="open-label">Open</span>
+      </a>
+    </section>
+
+    <footer class="launcher-footer">
+      <span id="orientationStatus">Landscape performance mode</span>
+      <span>Preview build. Sounds and interactions are functional prototypes, not final production instruments.</span>
+    </footer>
+  </main>
+
+  <script type="module" src="mobile.js"></script>
+</body>
+</html>
