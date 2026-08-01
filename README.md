@@ -22,24 +22,27 @@ Open [`index.html`](index.html).
 
 The current piano sound engine is diagnostic synthesis. It proves the interaction model and helps identify speaker limitations. It is not yet the final professional piano engine.
 
-### Guitar
+### Expressive guitar, Phase 1
 
 Open [`guitar.html`](guitar.html).
 
-- six strings in standard E2 A2 D3 G3 B3 E4 tuning
-- access to 24 frets through six overlapping position windows
+- six independently calibrated strings in standard E2 A2 D3 G3 B3 E4 tuning
+- access to 24 frets through overlapping windows and automatic slide following
 - separate fretting and picking areas for two-handed play
 - Hold and Latch fretting modes
-- simultaneous multi-finger chord shapes
-- vertical drag gestures for barres
+- simultaneous chord shapes, partial barres and full barres
 - highest-fret-wins behaviour on each string
-- open and muted string controls
-- individual plucking and ordered up-strums or down-strums
-- strum speed and touch pressure mapped to intensity
-- picking position mapped from warm neck tones to brighter bridge tones
-- Karplus-Strong plucked-string synthesis
+- hammer-ons, pull-offs and continuous slides on ringing strings
+- independent bends from one to four semitones
+- vibrato recognition from repeated bend movement
+- open strings and dead-muted strings
+- direction-aware single-string picking
+- partial and complete upstrokes and downstrokes
+- pick-position tone from warm neck attacks to brighter bridge attacks
+- a dedicated hold rail for continuous palm muting
+- per-string synthesis, compression and a live output meter
 
-The guitar implementation and its current limitations are documented in [`docs/GUITAR-PROTOTYPE.md`](docs/GUITAR-PROTOTYPE.md).
+The implementation and remaining roadmap are documented in [`docs/GUITAR-PROTOTYPE.md`](docs/GUITAR-PROTOTYPE.md).
 
 ## Run locally
 
@@ -60,6 +63,16 @@ No build step is required.
 4. Use a phone in landscape orientation for the intended layouts.
 
 Browsers normally require the first sound to follow a user interaction, so press a key, string or diagnostic button to initialise audio.
+
+## Tests
+
+The guitar model has dependency-free Node tests:
+
+```bash
+npm test
+```
+
+The tests currently validate tuning, note naming, fret-window bounds, highest-fret-wins behaviour, barres, chord shapes and string muting.
 
 ## Piano keyboard layout
 
@@ -82,7 +95,7 @@ Riffloom is intended to grow into a wider music platform with:
 6. mobile application packaging
 7. optional premium sounds, services and production tools around the open-source core
 
-The immediate focus is validating the piano and guitar interaction models on real phones before expanding the instrument library.
+The immediate focus is validating the piano and expressive guitar interaction models on real phones before expanding the instrument library.
 
 ## Project files
 
@@ -94,9 +107,19 @@ riffloom/
 ├── guitar.html
 ├── guitar.css
 ├── guitar.js
+├── instruments/
+│   └── guitar/
+│       ├── guitar-model.js
+│       ├── sound-engine.js
+│       ├── guitar-ui.js
+│       ├── gesture-controller.js
+│       ├── main.js
+│       └── tests/
+│           └── guitar-model.test.mjs
 ├── docs/
 │   ├── PIANO-PROTOTYPE.md
 │   └── GUITAR-PROTOTYPE.md
+├── package.json
 ├── CONTRIBUTING.md
 ├── LICENSE
 └── README.md
@@ -111,7 +134,7 @@ Useful early contributions include:
 - testing touch behaviour on different phones and tablets
 - measuring audible performance through speakers and headphones
 - identifying missed, stuck or incorrectly released notes
-- testing simultaneous fretting and strumming
+- testing simultaneous fretting, bending, palm muting and strumming
 - improving accessibility without reducing playability
 - proposing evidence-based interface improvements
 
