@@ -13,6 +13,7 @@ GitHub Pages deployment is configured from the `main` branch.
 - Drums: `https://kyrox-systems-hq.github.io/riffloom/drums.html`
 - Violin: `https://kyrox-systems-hq.github.io/riffloom/violin.html`
 - Tabla: `https://kyrox-systems-hq.github.io/riffloom/tabla.html`
+- Trumpet: `https://kyrox-systems-hq.github.io/riffloom/trumpet.html`
 
 If the links are not live yet, enable **GitHub Actions** as the Pages publishing source in the repository settings. The deployment workflow is in `.github/workflows/pages.yml`.
 
@@ -24,25 +25,18 @@ Open [`index.html`](index.html).
 
 - all 88 piano keys visible at once
 - three stacked landscape rows
-- 52 white keys and 36 black keys
-- a folded middle row to keep the keyboard path compact
 - multi-touch note input and slide-to-key movement
 - independent soft, sostenuto and sustain switches
-- stronger harmonics for bass notes on small speakers
-- audio diagnostics for A0, A1, A2 and C3
-- visible touch, audio-state and output-level feedback
+- stronger bass harmonics and live audio diagnostics
 
 ### Expressive guitar, Phase 1
 
 Open [`guitar.html`](guitar.html).
 
-- six independently calibrated strings in standard E2 A2 D3 G3 B3 E4 tuning
-- access to 24 frets through overlapping windows and automatic slide following
-- Hold and Latch fretting modes
-- chord shapes, barres, hammer-ons, pull-offs and continuous slides
-- independent bends, vibrato and palm muting
-- direction-aware single-string picking and complete upstrokes or downstrokes
-- per-string synthesis, compression and live output metering
+- six calibrated strings in standard tuning
+- overlapping fret windows and automatic slide following
+- chords, barres, hammer-ons, pull-offs and continuous slides
+- bends, vibrato, palm muting and directional picking
 
 See [`docs/GUITAR-PROTOTYPE.md`](docs/GUITAR-PROTOTYPE.md).
 
@@ -51,11 +45,9 @@ See [`docs/GUITAR-PROTOTYPE.md`](docs/GUITAR-PROTOTYPE.md).
 Open [`drums.html`](drums.html).
 
 - eight packed performance surfaces
-- position-sensitive snare, tom, cymbal, hi-hat and kick articulations
-- drag fills, flams, rolls and cymbal choking
-- one, two or four-bar event loops
-- adjustable BPM, count-in, metronome and quantisation
-- recording, playback, clearing and overdubbing
+- position-sensitive drum and cymbal articulations
+- fills, flams, rolls and cymbal choking
+- event looping, quantisation, recording and overdubbing
 
 See [`docs/DRUMS-PROTOTYPE.md`](docs/DRUMS-PROTOTYPE.md).
 
@@ -63,13 +55,10 @@ See [`docs/DRUMS-PROTOTYPE.md`](docs/DRUMS-PROTOTYPE.md).
 
 Open [`violin.html`](violin.html).
 
-- standard G3 D4 A4 E5 violin tuning
-- continuous fingerboard pitch through four overlapping position windows
-- Assisted and Free pitch intonation
-- Hold and Latch fingering
-- slides, finger vibrato and release to lower fingers or open strings
-- up-bow, down-bow, bow-speed dynamics and pressure fallback controls
-- double stops, string crossings, tremolo recognition and pizzicato
+- standard G3 D4 A4 E5 tuning
+- Assisted and Free continuous fingerboard pitch
+- slides, vibrato, up-bow, down-bow and bow-speed dynamics
+- double stops, string crossings, tremolo and pizzicato
 
 See [`docs/VIOLIN-PROTOTYPE.md`](docs/VIOLIN-PROTOTYPE.md).
 
@@ -77,71 +66,63 @@ See [`docs/VIOLIN-PROTOTYPE.md`](docs/VIOLIN-PROTOTYPE.md).
 
 Open [`tabla.html`](tabla.html).
 
-- separate bayan and dayan performance surfaces
-- common Phase 1 bols: Na, Tin, Tun, Te, Ge, Ghe and Ke
-- two-hand recognition for Dha and Dhin
-- a dedicated heel-pressure rail held by a separate finger
-- continuous bayan pitch bending after a resonant strike
-- selectable dayan tonic from C3 to G3
-- long-press damping
-- flam and roll timing recognition
-- recent-bol history and live output metering
+- separate bayan and dayan surfaces
+- common Phase 1 bols and two-hand Dha or Dhin recognition
+- dedicated heel-pressure control and continuous bayan pitch bending
+- damping, flams, rolls and bol history
 
 See [`docs/TABLA-PROTOTYPE.md`](docs/TABLA-PROTOTYPE.md).
+
+### Trumpet and brass engine, Phase 1
+
+Open [`trumpet.html`](trumpet.html).
+
+- left-thumb AIR rail for continuous breath and dynamics
+- two-dimensional LIP field for harmonic register, lip slurs and bends
+- separate TONGUE strip for repeated articulation under one breath
+- three full-height multi-touch valve strips
+- Assisted and Free lip modes
+- Hold and Latch accessibility modes
+- concert and B-flat written note displays
+- continuous brass synthesis and output metering
+
+See [`docs/TRUMPET-PROTOTYPE.md`](docs/TRUMPET-PROTOTYPE.md).
 
 ## Run locally
 
 No build step is required.
 
 1. Clone the repository.
-2. From the repository folder, run a local web server:
+2. From the repository folder, run:
 
    ```bash
    python -m http.server 8080
    ```
 
-3. Open one of the following:
+3. Open:
 
    - `http://localhost:8080` for piano
    - `http://localhost:8080/guitar.html` for guitar
    - `http://localhost:8080/drums.html` for drums
    - `http://localhost:8080/violin.html` for violin
    - `http://localhost:8080/tabla.html` for tabla
+   - `http://localhost:8080/trumpet.html` for trumpet
 
 4. Use a phone in landscape orientation for the intended layouts.
 
-Browsers normally require the first sound to follow a user interaction, so press a key, string, pad or diagnostic button to initialise audio.
+Browsers normally require the first sound to follow a user interaction, so touch a playing surface or diagnostic button to initialise audio.
 
 ## Tests
 
-The guitar, drum, violin and tabla models have dependency-free Node tests:
+The instrument models have dependency-free Node tests:
 
 ```bash
 npm test
 ```
 
-The tests validate guitar fretting, drum zones and looping, violin pitch behaviour, and tabla zones, compound bols, heel-pressure pitch and rapid-hit recognition.
+The suite validates guitar fretting, drum timing and looping, violin pitch behaviour, tabla stroke logic, and trumpet harmonic, valve, air and note-display behaviour.
 
-## Piano keyboard layout
-
-| Row | MIDI range | Musical range | Keys | White | Black |
-| --- | ---: | --- | ---: | ---: | ---: |
-| Top | 21 to 49 | A0 to C sharp 3 | 29 | 17 | 12 |
-| Middle | 50 to 78 | D3 to F sharp 5, displayed in reverse | 29 | 17 | 12 |
-| Bottom | 79 to 108 | G5 to C8 | 30 | 18 | 12 |
-| **Total** | 21 to 108 | A0 to C8 | **88** | **52** | **36** |
-
-## Direction
-
-Riffloom is intended to grow into a wider music platform with:
-
-1. more phone-native instruments
-2. professional, low-latency audio engines
-3. shared multitrack recording and overdubbing
-4. looping, arrangement and mixing
-5. MIDI and external-controller support
-6. mobile application packaging
-7. optional premium sounds, services and production tools around the open-source core
+## Product and instrument planning
 
 The broader product vision, commercial model, AI direction and cross-platform roadmap remain in [`docs/PRODUCT-PLAN.md`](docs/PRODUCT-PLAN.md).
 
@@ -152,40 +133,29 @@ The narrower instrument-family sequence is maintained in [`docs/INSTRUMENT-ROADM
 ```text
 riffloom/
 ├── index.html
-├── styles.css
-├── app.js
 ├── guitar.html
-├── guitar.css
-├── guitar.js
 ├── drums.html
-├── drums.css
-├── drums.js
 ├── violin.html
-├── violin.css
-├── violin.js
 ├── tabla.html
-├── tabla.css
-├── tabla.js
+├── trumpet.html
+├── styles and entry scripts
 ├── instruments/
 │   ├── guitar/
 │   ├── drums/
 │   ├── violin/
-│   └── tabla/
-│       ├── tabla-model.js
+│   ├── tabla/
+│   └── trumpet/
+│       ├── trumpet-model.js
 │       ├── sound-engine.js
-│       ├── tabla-ui.js
+│       ├── trumpet-ui.js
 │       ├── gesture-controller.js
 │       ├── main.js
 │       └── tests/
-│           └── tabla-model.test.mjs
+│           └── trumpet-model.test.mjs
 ├── docs/
 │   ├── PRODUCT-PLAN.md
 │   ├── INSTRUMENT-ROADMAP.md
-│   ├── PIANO-PROTOTYPE.md
-│   ├── GUITAR-PROTOTYPE.md
-│   ├── DRUMS-PROTOTYPE.md
-│   ├── VIOLIN-PROTOTYPE.md
-│   └── TABLA-PROTOTYPE.md
+│   └── instrument prototype specifications
 ├── .github/workflows/pages.yml
 ├── package.json
 ├── CONTRIBUTING.md
@@ -199,12 +169,11 @@ Contributions, device testing and informed criticism are welcome. Please read [C
 
 Useful early contributions include:
 
-- testing touch behaviour on different phones and tablets
+- testing simultaneous touches on different phones and tablets
 - measuring audible performance through speakers and headphones
 - identifying missed, stuck or incorrectly released notes and hits
-- testing violin intonation, bow continuity and double stops
-- testing tabla bol zones, two-hand compounds and bayan pitch movement
 - reviewing instrument mappings with experienced musicians and teachers
+- testing the trumpet five-finger layout, valve combinations, lip slurs and repeated tonguing
 - improving accessibility without reducing playability
 
 ## Licence
