@@ -4,9 +4,11 @@ Riffloom is an open-source, phone and tablet-native music creation platform for 
 
 The project starts with a simple question: instead of shrinking physical instruments onto a small touchscreen, what would musical instruments look like if they were designed for the screen from the beginning?
 
-## Current prototype
+## Current prototypes
 
-The repository currently contains the first working piano prototype:
+### Piano
+
+Open [`index.html`](index.html).
 
 - all 88 piano keys visible at once
 - three stacked landscape rows
@@ -18,9 +20,28 @@ The repository currently contains the first working piano prototype:
 - audio diagnostics for A0, A1, A2 and C3
 - visible touch, audio-state and output-level feedback
 
-The present audio engine is diagnostic synthesis. It proves the interaction model and helps identify speaker limitations. It is not yet the final professional piano sound engine.
+The current piano sound engine is diagnostic synthesis. It proves the interaction model and helps identify speaker limitations. It is not yet the final professional piano engine.
 
-## Run it locally
+### Guitar
+
+Open [`guitar.html`](guitar.html).
+
+- six strings in standard E2 A2 D3 G3 B3 E4 tuning
+- access to 24 frets through six overlapping position windows
+- separate fretting and picking areas for two-handed play
+- Hold and Latch fretting modes
+- simultaneous multi-finger chord shapes
+- vertical drag gestures for barres
+- highest-fret-wins behaviour on each string
+- open and muted string controls
+- individual plucking and ordered up-strums or down-strums
+- strum speed and touch pressure mapped to intensity
+- picking position mapped from warm neck tones to brighter bridge tones
+- Karplus-Strong plucked-string synthesis
+
+The guitar implementation and its current limitations are documented in [`docs/GUITAR-PROTOTYPE.md`](docs/GUITAR-PROTOTYPE.md).
+
+## Run locally
 
 No build step is required.
 
@@ -31,12 +52,16 @@ No build step is required.
    python -m http.server 8080
    ```
 
-3. Open `http://localhost:8080` in a browser.
-4. Use a phone in landscape orientation for the intended layout.
+3. Open one of the following:
 
-Browsers normally require the first sound to follow a user interaction, so press a key or diagnostic button to initialise audio.
+   - `http://localhost:8080` for piano
+   - `http://localhost:8080/guitar.html` for guitar
 
-## Keyboard layout
+4. Use a phone in landscape orientation for the intended layouts.
+
+Browsers normally require the first sound to follow a user interaction, so press a key, string or diagnostic button to initialise audio.
+
+## Piano keyboard layout
 
 | Row | MIDI range | Musical range | Keys | White | Black |
 | --- | ---: | --- | ---: | ---: | ---: |
@@ -57,7 +82,7 @@ Riffloom is intended to grow into a wider music platform with:
 6. mobile application packaging
 7. optional premium sounds, services and production tools around the open-source core
 
-The immediate focus is making the piano input model reliable before expanding the instrument library.
+The immediate focus is validating the piano and guitar interaction models on real phones before expanding the instrument library.
 
 ## Project files
 
@@ -66,8 +91,12 @@ riffloom/
 ├── index.html
 ├── styles.css
 ├── app.js
+├── guitar.html
+├── guitar.css
+├── guitar.js
 ├── docs/
-│   └── PIANO-PROTOTYPE.md
+│   ├── PIANO-PROTOTYPE.md
+│   └── GUITAR-PROTOTYPE.md
 ├── CONTRIBUTING.md
 ├── LICENSE
 └── README.md
@@ -80,8 +109,9 @@ Contributions, device testing and informed criticism are welcome. Please read [C
 Useful early contributions include:
 
 - testing touch behaviour on different phones and tablets
-- measuring audible bass performance on different speakers and headphones
+- measuring audible performance through speakers and headphones
 - identifying missed, stuck or incorrectly released notes
+- testing simultaneous fretting and strumming
 - improving accessibility without reducing playability
 - proposing evidence-based interface improvements
 
