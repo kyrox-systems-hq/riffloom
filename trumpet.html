@@ -1,0 +1,139 @@
+<!-- This Source Code Form is subject to the terms of the Mozilla Public
+   - License, v. 2.0. If a copy of the MPL was not distributed with this
+   - file, You can obtain one at https://mozilla.org/MPL/2.0/. -->
+<!doctype html>
+<html lang="en-GB">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#0d1117">
+  <meta name="description" content="Riffloom phone-native trumpet prototype with touch-controlled air, embouchure, tonguing and three-valve fingering.">
+  <title>Riffloom Trumpet Prototype</title>
+  <link rel="stylesheet" href="trumpet.css">
+</head>
+<body>
+  <main class="app-shell">
+    <header class="app-header">
+      <div>
+        <p class="eyebrow">Riffloom prototype 0.7</p>
+        <h1>Phone-native trumpet</h1>
+        <p class="subtitle">Hold air with the left thumb, shape the lips on a continuous harmonic field, and play three full-height valves with the right hand.</p>
+      </div>
+
+      <div class="header-side">
+        <nav class="instrument-nav" aria-label="Instrument prototypes">
+          <a href="index.html">Piano</a>
+          <a href="guitar.html">Guitar</a>
+          <a href="drums.html">Drums</a>
+          <a href="violin.html">Violin</a>
+          <a href="tabla.html">Tabla</a>
+          <a href="trumpet.html" aria-current="page">Trumpet</a>
+        </nav>
+
+        <div class="header-controls" aria-label="Trumpet settings">
+          <label><span>Lip control</span><select id="pitchMode"><option value="assisted" selected>Assisted</option><option value="free">Free</option></select></label>
+          <label><span>Valves</span><select id="valveMode"><option value="hold" selected>Hold</option><option value="latch">Latch</option></select></label>
+          <label><span>Air</span><select id="airMode"><option value="hold" selected>Hold</option><option value="latch">Latch</option></select></label>
+          <label><span>Notes</span><select id="noteDisplay"><option value="concert" selected>Concert</option><option value="written">B♭ written</option></select></label>
+          <label><span>Lip bend</span><select id="bendRange"><option value="1">±1</option><option value="2" selected>±2</option><option value="3">±3</option><option value="4">±4</option></select></label>
+          <label class="toggle-row"><input id="labelsToggle" type="checkbox" checked><span>Note labels</span></label>
+        </div>
+      </div>
+    </header>
+
+    <section class="instrument-panel" aria-labelledby="instrument-heading">
+      <h2 id="instrument-heading" class="sr-only">Playable B-flat trumpet</h2>
+
+      <div id="trumpetPhone" aria-label="Landscape phone trumpet interface">
+        <div id="airRail" role="slider" aria-label="Air pressure. Slide upwards for stronger air." aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
+          <div class="rail-title">AIR</div>
+          <span class="rail-high">FORTE</span>
+          <div class="air-track"><div id="airFill"></div><div id="airThumb"></div></div>
+          <span class="rail-low">PIANO</span>
+          <strong id="airReadout">0%</strong>
+          <button type="button" id="airRelease">AIR OFF</button>
+        </div>
+
+        <div id="lipSection">
+          <div class="lip-header">
+            <span>Higher harmonic</span>
+            <strong id="currentNote">F4</strong>
+            <span>Tighter lips →</span>
+          </div>
+
+          <div id="lipField" role="application" aria-label="Embouchure field. Move vertically for harmonic register and horizontally for lip bend.">
+            <div id="lipBands"></div>
+            <div class="lip-centre-line"></div>
+            <div class="lip-horizontal-label left">Relax / bend down</div>
+            <div class="lip-horizontal-label right">Tighten / bend up</div>
+            <div id="lipMarker"><strong>F4</strong><small>H3 · +0.00</small></div>
+          </div>
+
+          <button type="button" id="tonguePad">
+            <strong>TONGUE</strong>
+            <span>Tap while air continues to re-articulate the note</span>
+          </button>
+        </div>
+
+        <div id="valveSection">
+          <div class="valve-heading"><span>RIGHT HAND</span><strong>VALVES</strong></div>
+          <div id="valveBank" role="application" aria-label="Three trumpet valves"></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="control-panel" aria-labelledby="phase-heading">
+      <div class="section-heading">
+        <div>
+          <p class="eyebrow">Brass engine, Phase 1</p>
+          <h2 id="phase-heading">Air, embouchure, tonguing and valves</h2>
+        </div>
+        <p>Air controls loudness and continuity. The lip field selects the harmonic register and fine pitch. The valves lower the whole harmonic series. The TONGUE strip creates a new attack without releasing the air.</p>
+      </div>
+
+      <div class="control-groups">
+        <div>
+          <h3>Diagnostics</h3>
+          <div class="button-row">
+            <button type="button" id="testHarmonics">Test open harmonics</button>
+            <button type="button" id="testValves">Test valve range</button>
+          </div>
+        </div>
+        <div>
+          <h3>Reset</h3>
+          <div class="button-row">
+            <button type="button" id="clearValves">Open all valves</button>
+            <button type="button" id="stopTrumpet">Stop sound</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="metric-grid">
+        <article class="metric"><span>Displayed note</span><strong id="currentNoteMetric">F4</strong></article>
+        <article class="metric"><span>Concert pitch</span><strong id="concertNote">F4</strong></article>
+        <article class="metric"><span>Harmonic</span><strong id="harmonicStatus">H3 · Assisted</strong></article>
+        <article class="metric"><span>Valves</span><strong id="valveStatus">Open</strong></article>
+        <article class="metric"><span>Air</span><strong id="airStatus">Off</strong></article>
+        <article class="metric"><span>Technique</span><strong id="techniqueStatus">Ready</strong></article>
+        <article class="metric"><span>Audio</span><strong id="audioStatus">Locked</strong></article>
+      </div>
+
+      <div class="meter-block">
+        <div class="meter-label"><span>Output signal</span><span>Live brass voice</span></div>
+        <div id="meter" role="meter" aria-label="Audio output level" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><div id="level"></div></div>
+      </div>
+
+      <div id="report" class="report" aria-live="polite">
+        Phase 1 displays concert pitch by default. Select B-flat written notes to see the notation a trumpet player reads. The sound itself remains at concert pitch.
+      </div>
+    </section>
+
+    <footer>
+      <span>B♭ trumpet harmonic and valve model</span>
+      <span>Touch-only breath control now, optional microphone breath control later</span>
+    </footer>
+  </main>
+
+  <script type="module" src="trumpet.js"></script>
+</body>
+</html>
