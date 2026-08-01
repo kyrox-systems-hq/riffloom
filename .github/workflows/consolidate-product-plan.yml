@@ -6,12 +6,10 @@ on:
       - main
 
 permissions:
-  contents: write
-  pull-requests: write
+  contents: read
 
 jobs:
   consolidate:
-    if: github.actor != 'github-actions[bot]'
     runs-on: ubuntu-latest
     steps:
       - name: Check out consolidation branch
@@ -21,44 +19,22 @@ jobs:
           fetch-depth: 0
 
       - name: Consolidate and audit planning documents
-        env:
-          GH_TOKEN: ${{ github.token }}
-          PR_NUMBER: ${{ github.event.pull_request.number }}
-        run: |
-          set +e
-          python scripts/consolidate_product_plan.py > consolidation.log 2>&1
-          status=$?
-          cat consolidation.log
-          {
-            echo "### Consolidation audit run"
-            echo
-            echo '```text'
-            cat consolidation.log
-            echo '```'
-            echo
-            echo "Exit status: $status"
-          } > consolidation-comment.md
-          gh pr comment "$PR_NUMBER" --body-file consolidation-comment.md || true
-          exit "$status"
+        run: python scripts/consolidate_product_plan.py
 
-      - name: Remove one-time files and commit result
-        env:
-          GH_TOKEN: ${{ github.token }}
-          PR_NUMBER: ${{ github.event.pull_request.number }}
+      - name: Record audited changes
         run: |
-          set +e
-          rm scripts/consolidate_product_plan.py
-          rm .github/workflows/consolidate-product-plan.yml
-          rm -f consolidation.log consolidation-comment.md
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add -A
-          git commit -m "Consolidate Riffloom planning into one master document"
-          commit_status=$?
-          git push origin HEAD:agent/consolidate-product-plan
-          push_status=$?
-          if [ "$commit_status" -ne 0 ] || [ "$push_status" -ne 0 ]; then
-            gh pr comment "$PR_NUMBER" --body "Consolidation content passed its audit, but the automated commit or push failed. Commit status: $commit_status. Push status: $push_status." || true
-            exit 1
-          fi
-          gh pr comment "$PR_NUMBER" --body "Consolidation completed, audited and pushed. Temporary workflow and script were removed." || true
+          git status --short > consolidation-manifest.txt
+          git diff --stat >> consolidation-manifest.txt
+          printf '\nRemaining planning files:\n' >> consolidation-manifest.txt
+          find docs -maxdepth 1 -type f -name '*PLAN*' -o -name 'INSTRUMENT-ROADMAP.md' | sort >> consolidation-manifest.txt
+
+      - name: Upload audited consolidation
+        uses: actions/upload-artifact@v4
+        with:
+          name: consolidated-product-plan
+          path: |
+            docs/PRODUCT-PLAN.md
+            README.md
+            consolidation-manifest.txt
+          if-no-files-found: error
+          retention-days: 1
