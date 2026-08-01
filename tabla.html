@@ -1,0 +1,144 @@
+<!-- This Source Code Form is subject to the terms of the Mozilla Public
+   - License, v. 2.0. If a copy of the MPL was not distributed with this
+   - file, You can obtain one at https://mozilla.org/MPL/2.0/. -->
+<!doctype html>
+<html lang="en-GB">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#0d1117">
+  <meta name="description" content="Riffloom phone-native tabla prototype with dayan and bayan stroke zones, combined bols and continuous bayan pitch control.">
+  <title>Riffloom Tabla Prototype</title>
+  <link rel="stylesheet" href="tabla.css">
+</head>
+<body>
+  <main class="app-shell">
+    <header class="app-header">
+      <div>
+        <p class="eyebrow">Riffloom prototype 0.6</p>
+        <h1>Phone-native tabla</h1>
+        <p class="subtitle">Play separate dayan and bayan stroke zones, combine bols with both hands and bend a ringing bayan through a dedicated heel-pressure rail.</p>
+      </div>
+
+      <div class="header-side">
+        <nav class="instrument-nav" aria-label="Instrument prototypes">
+          <a href="index.html">Piano</a>
+          <a href="guitar.html">Guitar</a>
+          <a href="drums.html">Drums</a>
+          <a href="violin.html">Violin</a>
+          <a href="tabla.html" aria-current="page">Tabla</a>
+        </nav>
+
+        <div class="header-controls" aria-label="Tabla settings">
+          <label><span>Dayan tonic</span><select id="dayanTonic">
+            <option value="48">C3</option><option value="49" selected>C♯3</option><option value="50">D3</option><option value="51">D♯3</option><option value="52">E3</option><option value="53">F3</option><option value="54">F♯3</option><option value="55">G3</option>
+          </select></label>
+          <label><span>Bayan bend</span><select id="bayanBend"><option value="4">4 semitones</option><option value="7" selected>7 semitones</option><option value="12">12 semitones</option></select></label>
+          <label class="toggle-row"><input id="labelsToggle" type="checkbox" checked><span>Zone labels</span></label>
+        </div>
+      </div>
+    </header>
+
+    <section class="instrument-panel" aria-labelledby="instrument-heading">
+      <h2 id="instrument-heading" class="sr-only">Playable tabla pair</h2>
+
+      <div id="tablaPhone" aria-label="Landscape phone tabla interface">
+        <div id="performanceRow">
+          <div id="heelRail" role="slider" aria-label="Bayan heel pressure. Slide upwards for more pressure and higher pitch." aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
+            <div class="heel-title">HEEL</div>
+            <span class="heel-high">HIGH</span>
+            <div class="heel-track"><div id="heelFill"></div><div id="heelThumb"></div></div>
+            <span class="heel-low">LOW</span>
+            <strong id="heelReadout">0%</strong>
+          </div>
+
+          <div id="bayanSurface" class="drum-surface" data-drum="bayan" role="application" aria-label="Bayan bass drum">
+            <div class="surface-title"><strong>BAYAN</strong><span>Left hand · bass</span></div>
+            <div class="drum-head bayan-head">
+              <div class="ring kinar-ring"></div>
+              <div class="ring maidan-ring"></div>
+              <div class="ring syahi-ring bayan-syahi"></div>
+              <span class="zone-label bayan-ke">Ke<br><small>closed</small></span>
+              <span class="zone-label bayan-ge">Ge / Ghe<br><small>open, pressure bend</small></span>
+              <div class="hit-marker"></div>
+            </div>
+          </div>
+
+          <div id="dayanSurface" class="drum-surface" data-drum="dayan" role="application" aria-label="Dayan treble drum">
+            <div class="surface-title"><strong>DAYAN</strong><span>Right hand · tuned treble</span></div>
+            <div class="drum-head dayan-head">
+              <div class="ring kinar-ring"></div>
+              <div class="ring maidan-ring"></div>
+              <div class="ring inner-ring"></div>
+              <div class="ring syahi-ring dayan-syahi"></div>
+              <span class="zone-label dayan-na">Na<br><small>outer ringing</small></span>
+              <span class="zone-label dayan-tin">Tin<br><small>maidan</small></span>
+              <span class="zone-label dayan-tun">Tun<br><small>open inner</small></span>
+              <span class="zone-label dayan-te">Te<br><small>closed centre</small></span>
+              <div class="hit-marker"></div>
+            </div>
+          </div>
+        </div>
+
+        <div id="bolStrip" aria-label="Recent bol sequence"><span class="empty-bol">Recent bols appear here</span></div>
+      </div>
+    </section>
+
+    <section class="control-panel" aria-labelledby="phase-heading">
+      <div class="section-heading">
+        <div>
+          <p class="eyebrow">Tabla engine, Phase 1</p>
+          <h2 id="phase-heading">Stroke zones, compound bols and bayan pitch</h2>
+        </div>
+        <p>Tap a zone for its stroke. Hold a resonant surface after striking to damp it. Strike both drums within a short interval for Dha or Dhin. Hold the HEEL rail with one finger and move upwards while another finger plays the bayan.</p>
+      </div>
+
+      <div class="control-groups">
+        <div>
+          <h3>Bol balance check</h3>
+          <div class="button-row compact">
+            <button type="button" data-test-bol="ge">Ge</button>
+            <button type="button" data-test-bol="ke">Ke</button>
+            <button type="button" data-test-bol="na">Na</button>
+            <button type="button" data-test-bol="tin">Tin</button>
+            <button type="button" data-test-bol="tun">Tun</button>
+            <button type="button" data-test-bol="te">Te</button>
+            <button type="button" data-test-bol="dha">Dha</button>
+            <button type="button" data-test-bol="dhin">Dhin</button>
+            <button type="button" id="testAllBols">Test all</button>
+          </div>
+        </div>
+        <div>
+          <h3>Sequence</h3>
+          <div class="button-row"><button type="button" id="clearBolHistory">Clear bols</button><button type="button" id="dampAll">Damp both drums</button></div>
+        </div>
+      </div>
+
+      <div class="metric-grid">
+        <article class="metric"><span>Last bol</span><strong id="lastBol">None</strong></article>
+        <article class="metric"><span>Stroke</span><strong id="lastStroke">Ready</strong></article>
+        <article class="metric"><span>Technique</span><strong id="techniqueStatus">Ready</strong></article>
+        <article class="metric"><span>Bayan pressure</span><strong id="pressureStatus">0%</strong></article>
+        <article class="metric"><span>Dayan tonic</span><strong id="tonicStatus">C♯3</strong></article>
+        <article class="metric"><span>Audio</span><strong id="audioStatus">Locked</strong></article>
+      </div>
+
+      <div class="meter-block">
+        <div class="meter-label"><span>Output signal</span><span>Live tabla mix</span></div>
+        <div id="meter" role="meter" aria-label="Audio output level" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><div id="level"></div></div>
+      </div>
+
+      <div id="report" class="report" aria-live="polite">
+        This Phase 1 mapping uses common bols as a practical starting point. Tabla terminology and exact stroke production vary across gharanas, so later profiles should allow teacher-verified mappings rather than assuming one universal technique.
+      </div>
+    </section>
+
+    <footer>
+      <span>Dayan: Na, Tin, Tun and Te · Bayan: Ge, Ghe and Ke</span>
+      <span>Combined bols: Dha and Dhin · continuous heel-controlled bayan pitch</span>
+    </footer>
+  </main>
+
+  <script type="module" src="tabla.js"></script>
+</body>
+</html>

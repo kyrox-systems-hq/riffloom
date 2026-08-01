@@ -1,7 +1,8 @@
 # Riffloom Instrument Roadmap
 
 **Status:** Execution companion to `PRODUCT-PLAN.md`  
-**Serial:** RFL-IR-260801-1949-01  
+**Version:** 0.2  
+**Serial:** RFL-IR-260801-2015-02  
 **Last updated:** 1 August 2026
 
 ## Relationship to the product plan
@@ -54,28 +55,15 @@ Current prototype:
 - eight-surface drum kit
 - loop recording and overdubbing
 
-## Active build: bowed strings
+### Bowed-string engine
 
-### Phase 1: violin
+Current Phase 1 prototype:
 
-The first bowed-string engine must establish:
+- violin
 
-- four independently sounding strings
-- standard G3, D4, A4 and E5 tuning
-- continuous fingerboard pitch
-- assisted and free intonation
-- left-hand slides and vibrato
-- bow direction and speed
-- bow pressure fallback controls
-- double stops
-- string crossings
-- pizzicato
-- tremolo recognition
-- structured performance events for later recording
+The violin foundation now covers continuous fingerboard pitch, assisted and free intonation, slides, vibrato, bow direction, bow speed, pressure fallback controls, double stops, string crossings, tremolo recognition and pizzicato.
 
-### Bowed-string derivatives
-
-After violin validation, reuse the engine for:
+Planned derivatives:
 
 - viola
 - cello
@@ -84,30 +72,29 @@ After violin validation, reuse the engine for:
 
 Each derivative needs its own tuning, range, body response, bow behaviour, playing posture and ornamentation. Sarangi must not be treated as a simple violin skin. Its sympathetic resonance, fingering approach and ornamentation need a dedicated adaptation layer.
 
-## Hand-percussion family
+## Active build: hand percussion
 
-### Tabla
+### Tabla Phase 1
 
-Tabla should follow the first violin prototype.
+The first tabla engine establishes:
 
-The tabla engine must model:
+- separate dayan and bayan performance surfaces
+- common Phase 1 bols: Na, Tin, Tun, Te, Ge, Ghe and Ke
+- two-hand compound bol recognition for Dha and Dhin
+- a dedicated heel-pressure rail
+- continuous bayan pitch bending after a resonant stroke
+- long-press damping
+- flam and roll timing recognition
+- selectable dayan tonic
+- structured recent-bol history
 
-- separate dayan and bayan surfaces
-- centre, edge and muted strike zones
-- named bols and combined strokes
-- finger, palm and heel techniques
-- bayan pressure movement for continuous pitch bending
-- rapid rolls and repeated-finger patterns
-- independent left and right hand timing
-- taal-aware recording and practice support later
-
-Possible later derivatives include other hand drums, but tabla should be designed as its own performance system rather than as two generic drum pads.
+The next tabla phases should add teacher-verified stroke maps, additional bols, taal and theka practice, lehra accompaniment and professional tabla audio.
 
 ## Plucked regional-string family
 
 ### Rabab
 
-Rabab should follow tabla.
+Rabab follows tabla.
 
 The rabab engine should reuse appropriate guitar foundations while adding:
 
@@ -181,8 +168,8 @@ Shehnai must receive its own ornamentation, tuning and timbral model rather than
 
 The current intended sequence is:
 
-1. violin Phase 1
-2. tabla
+1. validate violin Phase 1
+2. tabla Phase 1
 3. rabab
 4. viola, cello, double bass and sarangi adaptations
 5. bass guitar

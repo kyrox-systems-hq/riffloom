@@ -12,6 +12,7 @@ GitHub Pages deployment is configured from the `main` branch.
 - Guitar: `https://kyrox-systems-hq.github.io/riffloom/guitar.html`
 - Drums: `https://kyrox-systems-hq.github.io/riffloom/drums.html`
 - Violin: `https://kyrox-systems-hq.github.io/riffloom/violin.html`
+- Tabla: `https://kyrox-systems-hq.github.io/riffloom/tabla.html`
 
 If the links are not live yet, enable **GitHub Actions** as the Pages publishing source in the repository settings. The deployment workflow is in `.github/workflows/pages.yml`.
 
@@ -31,51 +32,32 @@ Open [`index.html`](index.html).
 - audio diagnostics for A0, A1, A2 and C3
 - visible touch, audio-state and output-level feedback
 
-The current piano sound engine is diagnostic synthesis. It proves the interaction model and helps identify speaker limitations. It is not yet the final professional piano engine.
-
 ### Expressive guitar, Phase 1
 
 Open [`guitar.html`](guitar.html).
 
 - six independently calibrated strings in standard E2 A2 D3 G3 B3 E4 tuning
 - access to 24 frets through overlapping windows and automatic slide following
-- separate fretting and picking areas for two-handed play
 - Hold and Latch fretting modes
-- simultaneous chord shapes, partial barres and full barres
-- highest-fret-wins behaviour on each string
-- hammer-ons, pull-offs and continuous slides on ringing strings
-- independent bends from one to four semitones
-- vibrato recognition from repeated bend movement
-- open strings and dead-muted strings
-- direction-aware single-string picking
-- partial and complete upstrokes and downstrokes
-- pick-position tone from warm neck attacks to brighter bridge attacks
-- a dedicated hold rail for continuous palm muting
-- per-string synthesis, compression and a live output meter
+- chord shapes, barres, hammer-ons, pull-offs and continuous slides
+- independent bends, vibrato and palm muting
+- direction-aware single-string picking and complete upstrokes or downstrokes
+- per-string synthesis, compression and live output metering
 
-The implementation and remaining roadmap are documented in [`docs/GUITAR-PROTOTYPE.md`](docs/GUITAR-PROTOTYPE.md).
+See [`docs/GUITAR-PROTOTYPE.md`](docs/GUITAR-PROTOTYPE.md).
 
 ### Drums and first loop recorder
 
 Open [`drums.html`](drums.html).
 
 - eight packed performance surfaces
-- crash, high tom, mid tom, ride, hi-hat, snare, floor tom and kick
-- distinct snare head, rimshot and cross-stick zones
-- cymbal bell, bow and edge zones
-- tom head and rim zones
-- hard and soft kick beater zones
-- closed, half-open and open hi-hat states
-- pedal chick control
-- drag fills across several surfaces
-- cymbal choking by holding a ringing cymbal
-- flam and roll recognition from hit timing
+- position-sensitive snare, tom, cymbal, hi-hat and kick articulations
+- drag fills, flams, rolls and cymbal choking
 - one, two or four-bar event loops
 - adjustable BPM, count-in, metronome and quantisation
 - recording, playback, clearing and overdubbing
-- 16-step visual loop overview
 
-The drum design and recorder behaviour are documented in [`docs/DRUMS-PROTOTYPE.md`](docs/DRUMS-PROTOTYPE.md).
+See [`docs/DRUMS-PROTOTYPE.md`](docs/DRUMS-PROTOTYPE.md).
 
 ### Violin and bowed-string engine, Phase 1
 
@@ -83,18 +65,29 @@ Open [`violin.html`](violin.html).
 
 - standard G3 D4 A4 E5 violin tuning
 - continuous fingerboard pitch through four overlapping position windows
-- Assisted and Free pitch intonation modes
-- Hold and Latch fingering modes
-- highest-finger-wins behaviour on each string
-- release to a lower finger or open string
-- continuous slides and free-pitch vibrato recognition
-- rightward down-bow and leftward up-bow gestures
-- bow-speed dynamics and device-pressure support with a fallback
-- boundary-controlled double stops and independent multi-touch bowing
-- string crossings, tremolo recognition and pizzicato mode
-- per-string bowed synthesis, body filtering, compression and output metering
+- Assisted and Free pitch intonation
+- Hold and Latch fingering
+- slides, finger vibrato and release to lower fingers or open strings
+- up-bow, down-bow, bow-speed dynamics and pressure fallback controls
+- double stops, string crossings, tremolo recognition and pizzicato
 
-The violin behaviour is documented in [`docs/VIOLIN-PROTOTYPE.md`](docs/VIOLIN-PROTOTYPE.md).
+See [`docs/VIOLIN-PROTOTYPE.md`](docs/VIOLIN-PROTOTYPE.md).
+
+### Tabla and hand-percussion engine, Phase 1
+
+Open [`tabla.html`](tabla.html).
+
+- separate bayan and dayan performance surfaces
+- common Phase 1 bols: Na, Tin, Tun, Te, Ge, Ghe and Ke
+- two-hand recognition for Dha and Dhin
+- a dedicated heel-pressure rail held by a separate finger
+- continuous bayan pitch bending after a resonant strike
+- selectable dayan tonic from C3 to G3
+- long-press damping
+- flam and roll timing recognition
+- recent-bol history and live output metering
+
+See [`docs/TABLA-PROTOTYPE.md`](docs/TABLA-PROTOTYPE.md).
 
 ## Run locally
 
@@ -113,6 +106,7 @@ No build step is required.
    - `http://localhost:8080/guitar.html` for guitar
    - `http://localhost:8080/drums.html` for drums
    - `http://localhost:8080/violin.html` for violin
+   - `http://localhost:8080/tabla.html` for tabla
 
 4. Use a phone in landscape orientation for the intended layouts.
 
@@ -120,13 +114,13 @@ Browsers normally require the first sound to follow a user interaction, so press
 
 ## Tests
 
-The guitar, drum and violin models have dependency-free Node tests:
+The guitar, drum, violin and tabla models have dependency-free Node tests:
 
 ```bash
 npm test
 ```
 
-The tests validate guitar tuning and fretting, drum zones and looping, plus violin tuning, pitch windows, intonation, finger hierarchy and double-stop targeting.
+The tests validate guitar fretting, drum zones and looping, violin pitch behaviour, and tabla zones, compound bols, heel-pressure pitch and rapid-hit recognition.
 
 ## Piano keyboard layout
 
@@ -151,7 +145,7 @@ Riffloom is intended to grow into a wider music platform with:
 
 The broader product vision, commercial model, AI direction and cross-platform roadmap remain in [`docs/PRODUCT-PLAN.md`](docs/PRODUCT-PLAN.md).
 
-The narrower instrument-family sequence, including violin, tabla, rabab, bowed-string variants, brass, woodwinds and shehnai, is maintained separately in [`docs/INSTRUMENT-ROADMAP.md`](docs/INSTRUMENT-ROADMAP.md) so instrument implementation can continue without competing edits to the living product plan.
+The narrower instrument-family sequence is maintained in [`docs/INSTRUMENT-ROADMAP.md`](docs/INSTRUMENT-ROADMAP.md) so instrument implementation can continue without competing edits to the living product plan.
 
 ## Project files
 
@@ -169,24 +163,29 @@ riffloom/
 ├── violin.html
 ├── violin.css
 ├── violin.js
+├── tabla.html
+├── tabla.css
+├── tabla.js
 ├── instruments/
 │   ├── guitar/
 │   ├── drums/
-│   └── violin/
-│       ├── violin-model.js
+│   ├── violin/
+│   └── tabla/
+│       ├── tabla-model.js
 │       ├── sound-engine.js
-│       ├── violin-ui.js
+│       ├── tabla-ui.js
 │       ├── gesture-controller.js
 │       ├── main.js
 │       └── tests/
-│           └── violin-model.test.mjs
+│           └── tabla-model.test.mjs
 ├── docs/
 │   ├── PRODUCT-PLAN.md
 │   ├── INSTRUMENT-ROADMAP.md
 │   ├── PIANO-PROTOTYPE.md
 │   ├── GUITAR-PROTOTYPE.md
 │   ├── DRUMS-PROTOTYPE.md
-│   └── VIOLIN-PROTOTYPE.md
+│   ├── VIOLIN-PROTOTYPE.md
+│   └── TABLA-PROTOTYPE.md
 ├── .github/workflows/pages.yml
 ├── package.json
 ├── CONTRIBUTING.md
@@ -203,11 +202,10 @@ Useful early contributions include:
 - testing touch behaviour on different phones and tablets
 - measuring audible performance through speakers and headphones
 - identifying missed, stuck or incorrectly released notes and hits
-- testing simultaneous fretting, bending, palm muting and strumming
-- testing multi-finger drum hits, fills, cymbal chokes and loop timing
-- testing violin intonation, string crossings, double stops, slides and bow continuity
+- testing violin intonation, bow continuity and double stops
+- testing tabla bol zones, two-hand compounds and bayan pitch movement
+- reviewing instrument mappings with experienced musicians and teachers
 - improving accessibility without reducing playability
-- proposing evidence-based interface improvements
 
 ## Licence
 
