@@ -1,0 +1,104 @@
+<!-- This Source Code Form is subject to the terms of the Mozilla Public
+   - License, v. 2.0. If a copy of the MPL was not distributed with this
+   - file, You can obtain one at https://mozilla.org/MPL/2.0/. -->
+<!doctype html>
+<html lang="en-GB">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#0d1117">
+  <meta name="description" content="Riffloom phone-native drum kit with expressive zones, hi-hat control, looping and overdubbing.">
+  <title>Riffloom Drum Prototype</title>
+  <link rel="stylesheet" href="drums.css">
+</head>
+<body>
+  <main class="app-shell">
+    <header class="app-header">
+      <div>
+        <p class="eyebrow">Riffloom prototype 0.4</p>
+        <h1>Phone-native drums</h1>
+        <p class="subtitle">A packed eight-piece performance surface with expressive hit zones, hi-hat control and a first loop recorder.</p>
+      </div>
+
+      <div class="header-side">
+        <nav class="instrument-nav" aria-label="Instrument prototypes">
+          <a href="index.html">Piano</a>
+          <a href="guitar.html">Guitar</a>
+          <a href="drums.html" aria-current="page">Drums</a>
+        </nav>
+
+        <div class="header-controls" aria-label="Loop settings">
+          <label><span>BPM</span><input id="bpm" type="number" min="50" max="220" value="100"></label>
+          <label><span>Bars</span><select id="bars"><option value="1" selected>1</option><option value="2">2</option><option value="4">4</option></select></label>
+          <label><span>Quantise</span><select id="quantise"><option value="0">Off</option><option value="8">1/8</option><option value="16" selected>1/16</option></select></label>
+          <label class="toggle-row"><input id="metronome" type="checkbox"><span>Metronome</span></label>
+          <label class="toggle-row"><input id="countIn" type="checkbox" checked><span>Count-in</span></label>
+        </div>
+      </div>
+    </header>
+
+    <section class="instrument-panel" aria-labelledby="instrument-heading">
+      <h2 id="instrument-heading" class="sr-only">Playable drum kit</h2>
+
+      <div id="drumPhone" aria-label="Landscape phone drum kit">
+        <div id="hatRail" aria-label="Hi-hat state">
+          <div class="rail-label"><span>HI-HAT</span><strong id="hatReadout">Closed</strong></div>
+          <div class="hat-states" role="group" aria-label="Hi-hat openness">
+            <button type="button" data-hat="closed" aria-pressed="true">Closed</button>
+            <button type="button" data-hat="half" aria-pressed="false">Half</button>
+            <button type="button" data-hat="open" aria-pressed="false">Open</button>
+          </div>
+          <button type="button" id="hatPedal" class="pedal-button">Pedal chick</button>
+          <div class="screen-status"><span id="screenMode">Ready</span><strong id="loopClock">0.0 / 2.4s</strong></div>
+        </div>
+
+        <div id="padGrid" role="application" aria-label="Eight-piece drum performance surface"></div>
+
+        <div id="transport" aria-label="Loop recorder controls">
+          <button type="button" id="recordButton" class="record">Record</button>
+          <button type="button" id="overdubButton">Overdub</button>
+          <button type="button" id="playButton">Play</button>
+          <button type="button" id="stopButton">Stop</button>
+          <button type="button" id="clearLoopButton">Clear</button>
+          <div id="stepView" aria-label="Sixteen-step loop overview"></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="control-panel" aria-labelledby="guide-heading">
+      <div class="section-heading">
+        <div>
+          <p class="eyebrow">Performance rules</p>
+          <h2 id="guide-heading">Hit zones and gestures</h2>
+        </div>
+        <p>Tap pads for strikes. Drag through pads for fills. Hold a ringing cymbal to choke it. The snare edge changes articulation and the ride centre is the bell.</p>
+      </div>
+
+      <div class="metric-grid">
+        <article class="metric"><span>Last hit</span><strong id="lastHit">None</strong></article>
+        <article class="metric"><span>Technique</span><strong id="technique">Ready</strong></article>
+        <article class="metric"><span>Hi-hat</span><strong id="hatStatus">Closed</strong></article>
+        <article class="metric"><span>Loop</span><strong id="loopStatus">Empty</strong></article>
+        <article class="metric"><span>Events</span><strong id="eventCount">0</strong></article>
+        <article class="metric"><span>Audio</span><strong id="audioStatus">Locked</strong></article>
+      </div>
+
+      <div class="meter-block">
+        <div class="meter-label"><span>Output signal</span><span>Live kit</span></div>
+        <div id="meter" role="meter" aria-label="Audio output level" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><div id="level"></div></div>
+      </div>
+
+      <div id="report" class="report" aria-live="polite">
+        Start with the pads directly. Record creates a new loop. Overdub keeps the existing loop and adds new hits. The loop closes automatically after the selected number of bars.
+      </div>
+    </section>
+
+    <footer>
+      <span>Eight surfaces: crash, two rack toms, ride, hi-hat, snare, floor tom and kick</span>
+      <span>Phase 1 recorder: quantised event looping and overdubbing</span>
+    </footer>
+  </main>
+
+  <script type="module" src="drums.js"></script>
+</body>
+</html>
