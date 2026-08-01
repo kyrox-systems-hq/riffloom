@@ -1,0 +1,119 @@
+<!-- This Source Code Form is subject to the terms of the Mozilla Public
+   - License, v. 2.0. If a copy of the MPL was not distributed with this
+   - file, You can obtain one at https://mozilla.org/MPL/2.0/. -->
+<!doctype html>
+<html lang="en-GB">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#0d1117">
+  <meta name="description" content="Riffloom phone-native piano prototype with an 88-key stacked interface and audio diagnostics.">
+  <title>Riffloom Piano Prototype</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <main class="app-shell">
+    <header class="app-header">
+      <div>
+        <p class="eyebrow">Riffloom prototype 0.1</p>
+        <h1>Phone-native piano</h1>
+        <p class="subtitle">A complete 88-key piano folded into three playable landscape rows.</p>
+      </div>
+
+      <div class="header-controls" aria-label="Prototype controls">
+        <label class="toggle-row">
+          <input id="labels" type="checkbox" checked>
+          <span>Labels</span>
+        </label>
+        <label class="toggle-row">
+          <input id="bassBoost" type="checkbox" checked>
+          <span>Phone-speaker bass</span>
+        </label>
+        <label class="toggle-row">
+          <input id="attackClick" type="checkbox" checked>
+          <span>Diagnostic click</span>
+        </label>
+      </div>
+    </header>
+
+    <section class="instrument-panel" aria-labelledby="instrument-heading">
+      <h2 id="instrument-heading" class="sr-only">Playable piano</h2>
+      <div id="phone" aria-label="Landscape phone piano interface">
+        <aside id="pedals" aria-label="Piano pedal switches">
+          <button type="button" class="pedal" data-pedal="soft" aria-pressed="false" aria-label="Toggle soft pedal">
+            <strong>SFT</strong>
+            <span>Off</span>
+          </button>
+          <button type="button" class="pedal" data-pedal="sostenuto" aria-pressed="false" aria-label="Toggle sostenuto pedal">
+            <strong>SOS</strong>
+            <span>Off</span>
+          </button>
+          <button type="button" class="pedal" data-pedal="sustain" aria-pressed="false" aria-label="Toggle sustain pedal">
+            <strong>SUS</strong>
+            <span>Off</span>
+          </button>
+        </aside>
+
+        <svg id="keys" viewBox="0 0 1488 900" preserveAspectRatio="none" role="application" aria-label="Three-row, 88-key piano keyboard"></svg>
+      </div>
+    </section>
+
+    <section class="diagnostics" aria-labelledby="diagnostic-heading">
+      <div class="section-heading">
+        <div>
+          <p class="eyebrow">Audio diagnosis</p>
+          <h2 id="diagnostic-heading">Top-row bass checks</h2>
+        </div>
+        <p>Each test plays the real note, then the same input two octaves higher.</p>
+      </div>
+
+      <div class="test-grid">
+        <button type="button" class="test-button" data-midi="21">Diagnose A0</button>
+        <button type="button" class="test-button" data-midi="33">Diagnose A1</button>
+        <button type="button" class="test-button" data-midi="45">Diagnose A2</button>
+        <button type="button" class="test-button" data-midi="48">Diagnose C3</button>
+      </div>
+
+      <div class="metric-grid">
+        <article class="metric">
+          <span>Touch</span>
+          <strong id="touch">Waiting</strong>
+        </article>
+        <article class="metric">
+          <span>Audio</span>
+          <strong id="audio">Locked</strong>
+        </article>
+        <article class="metric">
+          <span>Last note</span>
+          <strong id="lastNote">None</strong>
+        </article>
+        <article class="metric">
+          <span>Peak</span>
+          <strong id="peak">0%</strong>
+        </article>
+      </div>
+
+      <div class="meter-block">
+        <div class="meter-label">
+          <span>Output signal</span>
+          <span id="signalText">No signal</span>
+        </div>
+        <div id="meter" role="meter" aria-label="Audio output level" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
+          <div id="level"></div>
+        </div>
+      </div>
+
+      <div id="report" class="report" aria-live="polite">
+        Press a top-row key. A colour change confirms touch, the click confirms audible routing, and the meter confirms that the audio engine produced a signal.
+      </div>
+    </section>
+
+    <footer>
+      <span>Keyboard map: A0 to C8</span>
+      <span>52 white keys, 36 black keys</span>
+    </footer>
+  </main>
+
+  <script type="module" src="app.js"></script>
+</body>
+</html>
