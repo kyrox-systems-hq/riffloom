@@ -4,6 +4,16 @@ Riffloom is an open-source, phone and tablet-native music creation platform for 
 
 The project starts with a simple question: instead of shrinking physical instruments onto a small touchscreen, what would musical instruments look like if they were designed for the screen from the beginning?
 
+## Live prototypes
+
+GitHub Pages deployment is configured from the `main` branch.
+
+- Piano: `https://kyrox-systems-hq.github.io/riffloom/`
+- Guitar: `https://kyrox-systems-hq.github.io/riffloom/guitar.html`
+- Drums: `https://kyrox-systems-hq.github.io/riffloom/drums.html`
+
+If the links are not live yet, enable **GitHub Actions** as the Pages publishing source in the repository settings. The deployment workflow is in `.github/workflows/pages.yml`.
+
 ## Current prototypes
 
 ### Piano
@@ -44,6 +54,28 @@ Open [`guitar.html`](guitar.html).
 
 The implementation and remaining roadmap are documented in [`docs/GUITAR-PROTOTYPE.md`](docs/GUITAR-PROTOTYPE.md).
 
+### Drums and first loop recorder
+
+Open [`drums.html`](drums.html).
+
+- eight packed performance surfaces
+- crash, high tom, mid tom, ride, hi-hat, snare, floor tom and kick
+- distinct snare head, rimshot and cross-stick zones
+- cymbal bell, bow and edge zones
+- tom head and rim zones
+- hard and soft kick beater zones
+- closed, half-open and open hi-hat states
+- pedal chick control
+- drag fills across several surfaces
+- cymbal choking by holding a ringing cymbal
+- flam and roll recognition from hit timing
+- one, two or four-bar event loops
+- adjustable BPM, count-in, metronome and quantisation
+- recording, playback, clearing and overdubbing
+- 16-step visual loop overview
+
+The drum design and recorder behaviour are documented in [`docs/DRUMS-PROTOTYPE.md`](docs/DRUMS-PROTOTYPE.md).
+
 ## Run locally
 
 No build step is required.
@@ -59,27 +91,28 @@ No build step is required.
 
    - `http://localhost:8080` for piano
    - `http://localhost:8080/guitar.html` for guitar
+   - `http://localhost:8080/drums.html` for drums
 
 4. Use a phone in landscape orientation for the intended layouts.
 
-Browsers normally require the first sound to follow a user interaction, so press a key, string or diagnostic button to initialise audio.
+Browsers normally require the first sound to follow a user interaction, so press a key, string, pad or diagnostic button to initialise audio.
 
 ## Tests
 
-The guitar model has dependency-free Node tests:
+The guitar and drum models have dependency-free Node tests:
 
 ```bash
 npm test
 ```
 
-The tests currently validate tuning, note naming, fret-window bounds, highest-fret-wins behaviour, barres, chord shapes and string muting.
+The tests validate guitar tuning and fretting behaviour, plus drum zones, hi-hat state, loop timing, quantisation, flam detection and roll detection.
 
 ## Piano keyboard layout
 
 | Row | MIDI range | Musical range | Keys | White | Black |
 | --- | ---: | --- | ---: | ---: | ---: |
-| Top | 21 to 49 | A0 to C♯3 | 29 | 17 | 12 |
-| Middle | 50 to 78 | D3 to F♯5, displayed in reverse | 29 | 17 | 12 |
+| Top | 21 to 49 | A0 to C sharp 3 | 29 | 17 | 12 |
+| Middle | 50 to 78 | D3 to F sharp 5, displayed in reverse | 29 | 17 | 12 |
 | Bottom | 79 to 108 | G5 to C8 | 30 | 18 | 12 |
 | **Total** | 21 to 108 | A0 to C8 | **88** | **52** | **36** |
 
@@ -89,13 +122,13 @@ Riffloom is intended to grow into a wider music platform with:
 
 1. more phone-native instruments
 2. professional, low-latency audio engines
-3. multitrack recording and overdubbing
+3. shared multitrack recording and overdubbing
 4. looping, arrangement and mixing
 5. MIDI and external-controller support
 6. mobile application packaging
 7. optional premium sounds, services and production tools around the open-source core
 
-The immediate focus is validating the piano and expressive guitar interaction models on real phones before expanding the instrument library.
+The current focus is validating the piano, expressive guitar and drum interaction models on real phones, then moving the drum event recorder into a shared multitrack layer.
 
 ## Project files
 
@@ -107,18 +140,32 @@ riffloom/
 ├── guitar.html
 ├── guitar.css
 ├── guitar.js
+├── drums.html
+├── drums.css
+├── drums.js
 ├── instruments/
-│   └── guitar/
-│       ├── guitar-model.js
+│   ├── guitar/
+│   │   ├── guitar-model.js
+│   │   ├── sound-engine.js
+│   │   ├── guitar-ui.js
+│   │   ├── gesture-controller.js
+│   │   ├── main.js
+│   │   └── tests/
+│   │       └── guitar-model.test.mjs
+│   └── drums/
+│       ├── drum-model.js
 │       ├── sound-engine.js
-│       ├── guitar-ui.js
+│       ├── looper.js
+│       ├── drum-ui.js
 │       ├── gesture-controller.js
 │       ├── main.js
 │       └── tests/
-│           └── guitar-model.test.mjs
+│           └── drum-model.test.mjs
 ├── docs/
 │   ├── PIANO-PROTOTYPE.md
-│   └── GUITAR-PROTOTYPE.md
+│   ├── GUITAR-PROTOTYPE.md
+│   └── DRUMS-PROTOTYPE.md
+├── .github/workflows/pages.yml
 ├── package.json
 ├── CONTRIBUTING.md
 ├── LICENSE
@@ -133,8 +180,9 @@ Useful early contributions include:
 
 - testing touch behaviour on different phones and tablets
 - measuring audible performance through speakers and headphones
-- identifying missed, stuck or incorrectly released notes
+- identifying missed, stuck or incorrectly released notes and hits
 - testing simultaneous fretting, bending, palm muting and strumming
+- testing multi-finger drum hits, fills, cymbal chokes and loop timing
 - improving accessibility without reducing playability
 - proposing evidence-based interface improvements
 
