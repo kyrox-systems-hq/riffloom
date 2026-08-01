@@ -40,14 +40,25 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout
-        uses: actions/checkout@v6
+      - name: Check out repository without external actions
+        env:
+          REPOSITORY: ${{ github.repository }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+        run: |
+          git init .
+          git remote add origin "https://github.com/${REPOSITORY}.git"
+          if [ "$GITHUB_EVENT_NAME" = "pull_request" ]; then
+            git fetch --depth=1 origin "refs/pull/${PR_NUMBER}/merge"
+          else
+            git fetch --depth=1 origin "$GITHUB_SHA"
+          fi
+          git checkout --detach FETCH_HEAD
 
-      - name: Set up Java 17
-        uses: actions/setup-java@v5
-        with:
-          distribution: temurin
-          java-version: "17"
+      - name: Select Java 17
+        run: |
+          echo "JAVA_HOME=$JAVA_HOME_17_X64" >> "$GITHUB_ENV"
+          echo "$JAVA_HOME_17_X64/bin" >> "$GITHUB_PATH"
+          "$JAVA_HOME_17_X64/bin/java" -version
 
       - name: Install Gradle 8.9
         run: |
@@ -88,17 +99,6 @@ jobs:
           cp "$APK" release/Riffloom-Android-Preview.apk
           sha256sum release/Riffloom-Android-Preview.apk > release/Riffloom-Android-Preview.apk.sha256
 
-      - name: Upload workflow artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: riffloom-android-preview-${{ github.run_number }}
-          path: |
-            release/Riffloom-Android-Preview.apk
-            release/Riffloom-Android-Preview.apk.sha256
-            release/apk-badging.txt
-          if-no-files-found: error
-          retention-days: 30
-
       - name: Publish rolling preview release
         if: github.event_name != 'pull_request'
         env:
@@ -108,6 +108,7 @@ jobs:
           gh release create android-preview \
             release/Riffloom-Android-Preview.apk \
             release/Riffloom-Android-Preview.apk.sha256 \
+            release/apk-badging.txt \
             --target "$GITHUB_SHA" \
             --prerelease \
             --title "Riffloom Android Preview" \
