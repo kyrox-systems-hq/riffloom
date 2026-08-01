@@ -4,14 +4,14 @@
 
 The guitar prototype tests a phone-native division of labour between the two hands:
 
-- the upper fretboard selects pitch and chord shape
-- the lower picking area triggers individual strings and strums
+- the upper fretboard selects pitch, chord shape and fretting articulation
+- the lower performance deck plucks, strums and shapes sounding strings
 
 The interface preserves the musical logic of a guitar without drawing a miniature decorative guitar.
 
 ## Instrument model
 
-The first prototype uses a six-string guitar in standard tuning, from lowest to highest:
+The Phase 1 prototype uses a six-string guitar in standard tuning, from lowest to highest:
 
 - E2
 - A2
@@ -20,13 +20,16 @@ The first prototype uses a six-string guitar in standard tuning, from lowest to 
 - B3
 - E4
 
+Low E is permanently displayed at the top and High E at the bottom. Therefore:
+
+- a downward swipe is a downstroke from low strings towards high strings
+- an upward swipe is an upstroke from high strings towards low strings
+
 The fretboard supports 24 frets.
 
-## Why the complete fretboard is not shown at once
+## Fret positions
 
-A guitar is normally played in positions. Chords and melodic passages typically use a limited local span of frets at one time. Showing all 24 frets would make each target too narrow on a phone.
-
-The prototype therefore uses six overlapping windows:
+Showing all 24 frets at once would make each target too narrow on a phone. The normal position buttons open six-fret windows:
 
 1. frets 1 to 6
 2. frets 5 to 10
@@ -35,91 +38,128 @@ The prototype therefore uses six overlapping windows:
 5. frets 17 to 22
 6. frets 19 to 24
 
-The overlaps keep boundary notes available before and after a position change.
+During a continuous slide, the window can advance one fret at a time when the finger remains at an edge. This lets a sounding slide cross the normal position boundaries.
 
-## Fretting model
+## Phase 1 interactions
 
-### Hold mode
+### Fretting
 
-A fret remains active while the finger remains on the screen. Several fingers can hold different strings and frets simultaneously while another finger plucks or strums.
+**Hold mode** keeps a fret active while the finger remains on the screen. Several pointers can hold independent frets.
 
-### Latch mode
+**Latch mode** keeps a selected fret active after release. It is useful for chord building, accessibility and testing.
 
-A tapped or dragged shape remains active after release. This supports one-handed testing, accessibility and quick chord building.
+The highest active fret wins when several fingers affect the same string.
 
-### Highest fret wins
+A finger dragged vertically through several strings at one fret creates a partial or full barre. Moving that same finger horizontally slides the complete barre.
 
-If more than one touch affects the same string, the highest fret controls the sounding pitch. This follows the physical behaviour of a fretted string.
+### Hammer-ons and pull-offs
 
-### Barre gesture
+When a string is already ringing:
 
-One finger can press a fret and drag vertically across adjacent strings. The traversed strings are assigned the same fret, allowing a single touch to represent a barre.
+- pressing a higher fret without another pick produces a hammer-on
+- revealing a lower held fret produces a pull-off
+- a quick release towards the open string produces a pull-off to open
+- a slower clean release damps the string
 
-### Open and muted strings
+### Slides
 
-The permanent cell at the left of each string toggles between open and muted. This follows the familiar O and X distinction used in guitar chord notation.
+Moving a held fret horizontally while its string is ringing creates a continuous pitch transition. The movement speed determines the transition time. A barre can be slid as one shape.
 
-## Picking model
+### Picking and strumming
 
-The lower area contains six large string lanes.
+The performance deck contains six large string lanes.
 
-- Tap one lane to pluck one string.
-- Swipe across lanes to strum.
-- Swipe direction determines up-strum or down-strum.
-- Swipe speed, with touch pressure where available, controls intensity.
-- Horizontal picking position changes timbre: nearer the neck is warmer and nearer the bridge is brighter.
+- tap one lane for a neutral pluck
+- flick down inside one lane for a down-picked note
+- flick up inside one lane for an up-picked note
+- swipe down through several lanes for a downstroke
+- swipe up through several lanes for an upstroke
+- start and stop on any lane for a partial strum
 
-This uses touch information for musical controls that have clear equivalents on a physical guitar.
+Fast gestures produce stronger, tighter attacks. Slower gestures leave more time between the strings.
 
-## Current audio engine
+The horizontal pick position changes timbre. Playing nearer the neck is warmer and playing nearer the bridge is brighter.
 
-The prototype uses a Karplus-Strong plucked-string model generated with Web Audio.
+### Bends and vibrato
 
-Each string:
+After plucking one string, keep the pointer on its lane and move right to raise pitch. The maximum range can be set from one to four semitones.
 
-- uses its fretted MIDI pitch
-- has string-specific decay
-- replaces its previous vibration when plucked again
-- passes through a brightness filter controlled by picking position
-- produces a short percussive sound when muted
+Returning towards the starting point releases the bend. Repeated small changes in movement direction are reported as vibrato. Each string has an independent bend value, so one note can bend while the others continue unchanged.
 
-This is a functional synthesis model, not yet a finished acoustic or electric guitar sound.
+### Palm muting
+
+The PALM rail sits on the right edge of the performance deck. Hold it with one pointer while another pointer picks or strums.
+
+- the left side of the rail applies light palm muting
+- moving right increases the depth
+- stronger muting shortens decay and darkens the sound
+- releasing the rail removes the palm mute for new notes
+
+Muted chord strings remain available through the O or X controls at the left of the fretboard. Crossing a muted string produces a dead percussive stroke rather than complete silence.
+
+## Audio engine
+
+The current Web Audio engine is a functional prototype rather than a finished guitar sample library.
+
+It now provides:
+
+- a separate gain, decay and harmonic profile for every string
+- stronger audible harmonics for the lower strings
+- direction-dependent pick attack
+- pick-position brightness
+- per-string monophonic behaviour, matching one vibrating note per physical string
+- frequency transitions for hammer-ons, pull-offs and slides
+- independent real-time bend control
+- continuous palm-mute filtering and decay control
+- a master compressor and output meter
+
+## Architecture
+
+The guitar is separated into focused modules:
+
+```text
+instruments/guitar/
+├── guitar-model.js
+├── sound-engine.js
+├── guitar-ui.js
+├── gesture-controller.js
+├── main.js
+└── tests/
+    └── guitar-model.test.mjs
+```
+
+The model owns tuning, frets, muting and chord shapes. The gesture controller converts screen movement into musical actions. The sound engine converts those actions into audio. This separation allows the current synthesis to be replaced without rebuilding the interaction model.
 
 ## Validation criteria
 
-A valid build should demonstrate:
+A valid Phase 1 build should demonstrate:
 
-- six independently playable strings
+- six independently audible strings
 - standard EADGBE tuning
 - fret access from 1 to 24
 - reliable simultaneous fretting and picking
-- independent pointer tracking for several fingers
-- vertical barre gestures
 - highest-fret-wins behaviour
-- open and muted strings
-- single-string plucking
-- ordered up-strums and down-strums
-- no stuck fretting gestures or endless voices
+- partial and full barres
+- hammer-ons and pull-offs on ringing strings
+- continuous slides, including position-window following
+- independent bends and vibrato
+- clean damping without stuck voices
+- open and dead-muted strings
+- direction-aware individual picking
+- partial and full upstrokes and downstrokes
+- continuous palm-mute depth
+- automated model tests passing
 
-## Known limitations
+## Not included yet
 
-- Hammer-ons, pull-offs and pitch-continuous slides are not yet modelled.
-- String bending and vibrato are not yet implemented.
-- The synthesiser does not yet model pickups, amplifiers, body resonance or real samples in depth.
-- Browser multi-touch limits vary by device.
-- A position change currently releases active fretting gestures.
+The next phases still need:
 
-## Next technical steps
-
-1. Add hammer-on, pull-off and slide behaviour when a sounding string changes fret.
-2. Add vertical bend and micro-vibrato gestures without confusing neighbouring strings.
-3. Add alternate tunings and capo support.
-4. Add acoustic, clean electric and distorted sound engines.
-5. Measure touch-to-audio latency on representative devices.
-6. Test the physical string order against tablature order with guitarists.
-7. Add automated tests for tuning, fret windows and chord presets.
-
-## Design references
-
-- Fender describes standard six-string tuning as E, A, D, G, B, E from the lowest string to the highest: https://www.fender.com/articles/setup/standard-tuning-how-eadgbe-came-to-be
-- MDN documents Pointer Events as a unified input model that supports multiple simultaneous pointers: https://developer.mozilla.org/en-US/docs/Web/API/Pointer_events/Multi-touch_interaction
+- proper fingerstyle attack profiles
+- rest strokes and free strokes
+- alternate, tremolo, sweep and hybrid picking recognition
+- natural, artificial, pinch and tapped harmonics
+- body percussion and string slaps
+- alternate tunings, capo and additional string counts
+- acoustic, electric, classical, baritone and fretless profiles
+- whammy systems, feedback and specialist extended techniques
+- a professional sample-based or physically modelled production sound engine

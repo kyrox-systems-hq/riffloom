@@ -7,17 +7,17 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <meta name="theme-color" content="#0d1117">
-  <meta name="description" content="Riffloom phone-native guitar prototype with chord fingering, barre gestures and multi-string strumming.">
-  <title>Riffloom Guitar Prototype</title>
+  <meta name="description" content="Riffloom expressive phone-native guitar prototype with fretting articulation, bends, vibrato and palm muting.">
+  <title>Riffloom Expressive Guitar Prototype</title>
   <link rel="stylesheet" href="guitar.css">
 </head>
 <body>
   <main class="app-shell">
     <header class="app-header">
       <div>
-        <p class="eyebrow">Riffloom prototype 0.2</p>
-        <h1>Phone-native guitar</h1>
-        <p class="subtitle">Fret with one hand, pluck or strum with the other, without shrinking an entire guitar onto the screen.</p>
+        <p class="eyebrow">Riffloom prototype 0.3</p>
+        <h1>Expressive phone-native guitar</h1>
+        <p class="subtitle">Fret with one hand, pick with the other, and shape sounding strings through slides, bends, vibrato and palm muting.</p>
       </div>
 
       <div class="header-side">
@@ -35,74 +35,119 @@
             </select>
           </label>
 
-          <label class="toggle-row">
-            <input id="labelsToggle" type="checkbox" checked>
-            <span>Note labels</span>
+          <label>
+            <span>Maximum bend</span>
+            <select id="bendRange">
+              <option value="1">1 semitone</option>
+              <option value="2" selected>2 semitones</option>
+              <option value="3">3 semitones</option>
+              <option value="4">4 semitones</option>
+            </select>
           </label>
 
           <label class="toggle-row">
-            <input id="stringOrderToggle" type="checkbox">
-            <span>High E on top</span>
+            <input id="labelsToggle" type="checkbox" checked>
+            <span>Note labels</span>
           </label>
         </div>
       </div>
     </header>
 
     <section class="instrument-panel" aria-labelledby="instrument-heading">
-      <h2 id="instrument-heading" class="sr-only">Playable guitar</h2>
+      <h2 id="instrument-heading" class="sr-only">Playable expressive guitar</h2>
 
       <div id="guitarPhone" aria-label="Landscape phone guitar interface">
         <div id="positionRail" aria-label="Fretboard position selector">
           <div class="position-caption">
-            <span>Fret position</span>
+            <span>Visible frets</span>
             <strong id="positionReadout">1 to 6</strong>
           </div>
           <div id="positionButtons"></div>
         </div>
 
-        <svg id="fretboard" viewBox="0 0 1488 470" preserveAspectRatio="none" role="application" aria-label="Six-string fretboard"></svg>
+        <div id="fretboard" role="application" aria-label="Six-string fretboard"></div>
 
-        <div id="pickingArea">
-          <div class="tone-scale" aria-hidden="true">
-            <span>Neck, warmer</span>
-            <span>Bridge, brighter</span>
+        <div id="performanceDeck">
+          <div id="strokeGuide" aria-hidden="true">
+            <div><strong>↓</strong><span>DOWN</span></div>
+            <div><strong>↑</strong><span>UP</span></div>
           </div>
-          <svg id="strings" viewBox="0 0 1488 320" preserveAspectRatio="none" role="application" aria-label="Six playable strings"></svg>
+
+          <div id="pickingArea">
+            <div class="tone-scale" aria-hidden="true">
+              <span>Neck, warmer</span>
+              <span>Pick position</span>
+              <span>Bridge, brighter</span>
+            </div>
+            <div id="stringLanes" role="application" aria-label="Six playable strings"></div>
+          </div>
+
+          <div id="palmRail" role="slider" aria-label="Hold for palm muting. Move right for stronger muting." aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
+            <div class="palm-title">PALM</div>
+            <div class="palm-track"><div id="palmFill"></div></div>
+            <small>light → heavy</small>
+          </div>
         </div>
       </div>
     </section>
 
-    <section class="control-panel" aria-labelledby="shape-heading">
+    <section class="control-panel" aria-labelledby="performance-heading">
       <div class="section-heading">
         <div>
-          <p class="eyebrow">Chord lab</p>
-          <h2 id="shape-heading">Load a shape or build your own</h2>
+          <p class="eyebrow">Phase 1 articulation</p>
+          <h2 id="performance-heading">Conventional rhythm and lead controls</h2>
         </div>
-        <p>Drag vertically across one fret to create a barre. On each string, the highest held fret wins, as it does on a physical guitar.</p>
+        <p>Move a held fret horizontally for a slide. Press a new fret on a ringing string for a hammer-on. Release to a lower held fret for a pull-off. Hold a sounding string lane and drag right for a bend or oscillate for vibrato.</p>
       </div>
 
-      <div class="preset-row">
-        <button type="button" class="preset" data-chord="E">E</button>
-        <button type="button" class="preset" data-chord="G">G</button>
-        <button type="button" class="preset" data-chord="C">C</button>
-        <button type="button" class="preset" data-chord="Am">Am</button>
-        <button type="button" class="preset" data-chord="D">D</button>
-        <button type="button" class="preset" data-chord="F">F barre</button>
-        <button type="button" id="clearFingering">Clear</button>
+      <div class="control-groups">
+        <div>
+          <h3>Chord shapes</h3>
+          <div class="button-row">
+            <button type="button" data-chord="E">E</button>
+            <button type="button" data-chord="G">G</button>
+            <button type="button" data-chord="C">C</button>
+            <button type="button" data-chord="Am">Am</button>
+            <button type="button" data-chord="D">D</button>
+            <button type="button" data-chord="F">F barre</button>
+            <button type="button" id="clearFingering">Clear</button>
+          </div>
+        </div>
+
+        <div>
+          <h3>String balance check</h3>
+          <div class="button-row compact">
+            <button type="button" data-test-string="0">Low E</button>
+            <button type="button" data-test-string="1">A</button>
+            <button type="button" data-test-string="2">D</button>
+            <button type="button" data-test-string="3">G</button>
+            <button type="button" data-test-string="4">B</button>
+            <button type="button" data-test-string="5">High E</button>
+            <button type="button" id="testAllStrings">Test all</button>
+          </div>
+        </div>
       </div>
 
       <div class="metric-grid">
-        <article class="metric">
+        <article class="metric wide">
           <span>Current strings</span>
           <strong id="currentNotes">E2 · A2 · D3 · G3 · B3 · E4</strong>
         </article>
         <article class="metric">
-          <span>Last action</span>
+          <span>Last articulation</span>
           <strong id="lastAction">Ready</strong>
         </article>
         <article class="metric">
-          <span>Strum</span>
-          <strong id="strumStatus">None</strong>
+          <span>Pick or strum</span>
+          <strong id="strokeStatus">None</strong>
+        </article>
+        <article class="metric">
+          <span>Bend or vibrato</span>
+          <strong id="bendStatus">None</strong>
+        </article>
+        <article class="metric">
+          <span>Palm mute</span>
+          <strong id="palmStatus">Off</strong>
         </article>
         <article class="metric">
           <span>Audio</span>
@@ -110,14 +155,19 @@
         </article>
       </div>
 
+      <div class="meter-block">
+        <div class="meter-label"><span>Output signal</span><span>Live mix</span></div>
+        <div id="meter" role="meter" aria-label="Audio output level" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><div id="level"></div></div>
+      </div>
+
       <div id="report" class="report" aria-live="polite">
-        Hold fret cells with one or more fingers, then tap a string or swipe across the picking area. Plucking nearer the bridge produces a brighter tone.
+        Low E is fixed at the top. Swipe down through the lanes for a downstroke and up for an upstroke. Hold the PALM rail with another finger while picking to shorten and darken the strings.
       </div>
     </section>
 
     <footer>
       <span>Standard six-string tuning: E2 A2 D3 G3 B3 E4</span>
-      <span>24 frets through six overlapping position windows</span>
+      <span>Phase 1: hammer-ons, pull-offs, slides, bends, vibrato, palm muting and directional picking</span>
     </footer>
   </main>
 
