@@ -139,11 +139,9 @@ npm test
 
 The suite validates guitar fretting, drum timing and looping, violin pitch behaviour, tabla stroke logic, trumpet harmonic and valve behaviour, and saxophone stack, octave, palm, low-register, transposition and fingering modes.
 
-## Product and instrument planning
+## Product planning
 
-The broader product vision, commercial model, AI direction and cross-platform roadmap remain in [`docs/PRODUCT-PLAN.md`](docs/PRODUCT-PLAN.md).
-
-The narrower instrument-family sequence is maintained in [`docs/INSTRUMENT-ROADMAP.md`](docs/INSTRUMENT-ROADMAP.md) so instrument implementation can continue without competing edits to the living product plan.
+The complete product vision, instrument-family roadmap, commercial model, AI direction, connected-session design, living notation and learning system, expanded opportunity map and production technology-stack research brief are consolidated in [`docs/PRODUCT-PLAN.md`](docs/PRODUCT-PLAN.md). It is the single canonical planning document.
 
 ## Project files
 
@@ -173,7 +171,6 @@ riffloom/
 │           └── saxophone-model.test.mjs
 ├── docs/
 │   ├── PRODUCT-PLAN.md
-│   ├── INSTRUMENT-ROADMAP.md
 │   └── instrument prototype specifications
 ├── .github/workflows/pages.yml
 ├── package.json
