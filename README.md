@@ -11,6 +11,7 @@ GitHub Pages deployment is configured from the `main` branch.
 - Piano: `https://kyrox-systems-hq.github.io/riffloom/`
 - Guitar: `https://kyrox-systems-hq.github.io/riffloom/guitar.html`
 - Drums: `https://kyrox-systems-hq.github.io/riffloom/drums.html`
+- Violin: `https://kyrox-systems-hq.github.io/riffloom/violin.html`
 
 If the links are not live yet, enable **GitHub Actions** as the Pages publishing source in the repository settings. The deployment workflow is in `.github/workflows/pages.yml`.
 
@@ -76,6 +77,25 @@ Open [`drums.html`](drums.html).
 
 The drum design and recorder behaviour are documented in [`docs/DRUMS-PROTOTYPE.md`](docs/DRUMS-PROTOTYPE.md).
 
+### Violin and bowed-string engine, Phase 1
+
+Open [`violin.html`](violin.html).
+
+- standard G3 D4 A4 E5 violin tuning
+- continuous fingerboard pitch through four overlapping position windows
+- Assisted and Free pitch intonation modes
+- Hold and Latch fingering modes
+- highest-finger-wins behaviour on each string
+- release to a lower finger or open string
+- continuous slides and free-pitch vibrato recognition
+- rightward down-bow and leftward up-bow gestures
+- bow-speed dynamics and device-pressure support with a fallback
+- boundary-controlled double stops and independent multi-touch bowing
+- string crossings, tremolo recognition and pizzicato mode
+- per-string bowed synthesis, body filtering, compression and output metering
+
+The violin behaviour is documented in [`docs/VIOLIN-PROTOTYPE.md`](docs/VIOLIN-PROTOTYPE.md).
+
 ## Run locally
 
 No build step is required.
@@ -92,6 +112,7 @@ No build step is required.
    - `http://localhost:8080` for piano
    - `http://localhost:8080/guitar.html` for guitar
    - `http://localhost:8080/drums.html` for drums
+   - `http://localhost:8080/violin.html` for violin
 
 4. Use a phone in landscape orientation for the intended layouts.
 
@@ -99,13 +120,13 @@ Browsers normally require the first sound to follow a user interaction, so press
 
 ## Tests
 
-The guitar and drum models have dependency-free Node tests:
+The guitar, drum and violin models have dependency-free Node tests:
 
 ```bash
 npm test
 ```
 
-The tests validate guitar tuning and fretting behaviour, plus drum zones, hi-hat state, loop timing, quantisation, flam detection and roll detection.
+The tests validate guitar tuning and fretting, drum zones and looping, plus violin tuning, pitch windows, intonation, finger hierarchy and double-stop targeting.
 
 ## Piano keyboard layout
 
@@ -128,9 +149,9 @@ Riffloom is intended to grow into a wider music platform with:
 6. mobile application packaging
 7. optional premium sounds, services and production tools around the open-source core
 
-The current focus is validating the piano, expressive guitar and drum interaction models on real phones, then moving the drum event recorder into a shared multitrack layer.
+The broader product vision, commercial model, AI direction and cross-platform roadmap remain in [`docs/PRODUCT-PLAN.md`](docs/PRODUCT-PLAN.md).
 
-The broader product vision, commercial model, AI direction and cross-platform roadmap are documented in [`docs/PRODUCT-PLAN.md`](docs/PRODUCT-PLAN.md).
+The narrower instrument-family sequence, including violin, tabla, rabab, bowed-string variants, brass, woodwinds and shehnai, is maintained separately in [`docs/INSTRUMENT-ROADMAP.md`](docs/INSTRUMENT-ROADMAP.md) so instrument implementation can continue without competing edits to the living product plan.
 
 ## Project files
 
@@ -145,29 +166,27 @@ riffloom/
 ├── drums.html
 ├── drums.css
 ├── drums.js
+├── violin.html
+├── violin.css
+├── violin.js
 ├── instruments/
 │   ├── guitar/
-│   │   ├── guitar-model.js
-│   │   ├── sound-engine.js
-│   │   ├── guitar-ui.js
-│   │   ├── gesture-controller.js
-│   │   ├── main.js
-│   │   └── tests/
-│   │       └── guitar-model.test.mjs
-│   └── drums/
-│       ├── drum-model.js
+│   ├── drums/
+│   └── violin/
+│       ├── violin-model.js
 │       ├── sound-engine.js
-│       ├── looper.js
-│       ├── drum-ui.js
+│       ├── violin-ui.js
 │       ├── gesture-controller.js
 │       ├── main.js
 │       └── tests/
-│           └── drum-model.test.mjs
+│           └── violin-model.test.mjs
 ├── docs/
 │   ├── PRODUCT-PLAN.md
+│   ├── INSTRUMENT-ROADMAP.md
 │   ├── PIANO-PROTOTYPE.md
 │   ├── GUITAR-PROTOTYPE.md
-│   └── DRUMS-PROTOTYPE.md
+│   ├── DRUMS-PROTOTYPE.md
+│   └── VIOLIN-PROTOTYPE.md
 ├── .github/workflows/pages.yml
 ├── package.json
 ├── CONTRIBUTING.md
@@ -186,6 +205,7 @@ Useful early contributions include:
 - identifying missed, stuck or incorrectly released notes and hits
 - testing simultaneous fretting, bending, palm muting and strumming
 - testing multi-finger drum hits, fills, cymbal chokes and loop timing
+- testing violin intonation, string crossings, double stops, slides and bow continuity
 - improving accessibility without reducing playability
 - proposing evidence-based interface improvements
 
