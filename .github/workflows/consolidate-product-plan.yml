@@ -9,32 +9,12 @@ permissions:
   contents: read
 
 jobs:
-  consolidate:
+  diagnose:
     runs-on: ubuntu-latest
     steps:
-      - name: Check out consolidation branch
-        uses: actions/checkout@v4
-        with:
-          ref: agent/consolidate-product-plan
-          fetch-depth: 0
-
-      - name: Consolidate and audit planning documents
-        run: python scripts/consolidate_product_plan.py
-
-      - name: Record audited changes
+      - name: Confirm runner availability
         run: |
-          git status --short > consolidation-manifest.txt
-          git diff --stat >> consolidation-manifest.txt
-          printf '\nRemaining planning files:\n' >> consolidation-manifest.txt
-          find docs -maxdepth 1 -type f -name '*PLAN*' -o -name 'INSTRUMENT-ROADMAP.md' | sort >> consolidation-manifest.txt
-
-      - name: Upload audited consolidation
-        uses: actions/upload-artifact@v4
-        with:
-          name: consolidated-product-plan
-          path: |
-            docs/PRODUCT-PLAN.md
-            README.md
-            consolidation-manifest.txt
-          if-no-files-found: error
-          retention-days: 1
+          echo "GitHub Actions runner is available"
+          uname -a
+          python --version
+          git --version
