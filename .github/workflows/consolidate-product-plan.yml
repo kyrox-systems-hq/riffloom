@@ -6,6 +6,9 @@ on:
       - agent/consolidate-product-plan
     paths:
       - .github/workflows/consolidate-product-plan.yml
+  pull_request:
+    branches:
+      - main
 
 permissions:
   contents: write
