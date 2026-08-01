@@ -97,6 +97,8 @@ Riffloom is intended to grow into a wider music platform with:
 
 The immediate focus is validating the piano and expressive guitar interaction models on real phones before expanding the instrument library.
 
+The broader product vision, commercial model, AI direction and cross-platform roadmap are documented in [`docs/PRODUCT-PLAN.md`](docs/PRODUCT-PLAN.md).
+
 ## Project files
 
 ```text
@@ -117,6 +119,7 @@ riffloom/
 │       └── tests/
 │           └── guitar-model.test.mjs
 ├── docs/
+│   ├── PRODUCT-PLAN.md
 │   ├── PIANO-PROTOTYPE.md
 │   └── GUITAR-PROTOTYPE.md
 ├── package.json
