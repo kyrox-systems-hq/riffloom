@@ -1,0 +1,113 @@
+<!-- This Source Code Form is subject to the terms of the Mozilla Public
+   - License, v. 2.0. If a copy of the MPL was not distributed with this
+   - file, You can obtain one at https://mozilla.org/MPL/2.0/. -->
+<!doctype html>
+<html lang="en-GB">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#0d1117">
+  <meta name="description" content="Riffloom phone-native violin prototype with continuous intonation, bowing, double stops, slides, vibrato and pizzicato.">
+  <title>Riffloom Violin Prototype</title>
+  <link rel="stylesheet" href="violin.css">
+</head>
+<body>
+  <main class="app-shell">
+    <header class="app-header">
+      <div>
+        <p class="eyebrow">Riffloom prototype 0.5</p>
+        <h1>Phone-native violin</h1>
+        <p class="subtitle">Finger continuous pitch with the left hand, then bow or pluck four independently expressive strings with the right.</p>
+      </div>
+
+      <div class="header-side">
+        <nav class="instrument-nav" aria-label="Instrument prototypes">
+          <a href="index.html">Piano</a>
+          <a href="guitar.html">Guitar</a>
+          <a href="drums.html">Drums</a>
+          <a href="violin.html" aria-current="page">Violin</a>
+        </nav>
+
+        <div class="header-controls" aria-label="Violin settings">
+          <label><span>Finger mode</span><select id="fingerMode"><option value="hold" selected>Hold</option><option value="latch">Latch</option></select></label>
+          <label><span>Intonation</span><select id="intonationMode"><option value="assisted" selected>Assisted</option><option value="free">Free pitch</option></select></label>
+          <label><span>Right hand</span><select id="playMode"><option value="bow" selected>Bow</option><option value="pizz">Pizzicato</option></select></label>
+          <label><span>Bow weight</span><select id="bowWeight"><option value="0.32">Light</option><option value="0.56" selected>Normal</option><option value="0.82">Firm</option></select></label>
+          <label class="toggle-row"><input id="labelsToggle" type="checkbox" checked><span>Note labels</span></label>
+        </div>
+      </div>
+    </header>
+
+    <section class="instrument-panel" aria-labelledby="instrument-heading">
+      <h2 id="instrument-heading" class="sr-only">Playable violin</h2>
+
+      <div id="violinPhone" aria-label="Landscape phone violin interface">
+        <div id="positionRail" aria-label="Fingerboard pitch range">
+          <div class="position-caption"><span>Visible pitch range</span><strong id="positionReadout">0 to 12 semitones</strong></div>
+          <div id="positionButtons"></div>
+        </div>
+
+        <div id="fingerboard" role="application" aria-label="Four-string continuous fingerboard"></div>
+
+        <div id="bowDeck">
+          <div class="bow-guide left-guide" aria-hidden="true"><strong>←</strong><span>UP-BOW</span></div>
+          <div id="bowLanes" role="application" aria-label="Four bowing and pizzicato lanes"></div>
+          <div class="bow-guide right-guide" aria-hidden="true"><strong>→</strong><span>DOWN-BOW</span></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="control-panel" aria-labelledby="phase-heading">
+      <div class="section-heading">
+        <div>
+          <p class="eyebrow">Bowed-string engine, Phase 1</p>
+          <h2 id="phase-heading">Continuous pitch and bow control</h2>
+        </div>
+        <p>In Bow mode, move right for down-bow and left for up-bow. Speed controls energy. Touch near a boundary between two lanes to bow a double stop. In Free pitch mode, move a finger continuously for slides and vibrato.</p>
+      </div>
+
+      <div class="control-groups">
+        <div>
+          <h3>Open-string balance</h3>
+          <div class="button-row compact">
+            <button type="button" data-test-string="0">G3</button>
+            <button type="button" data-test-string="1">D4</button>
+            <button type="button" data-test-string="2">A4</button>
+            <button type="button" data-test-string="3">E5</button>
+            <button type="button" id="testAllStrings">Test all</button>
+          </div>
+        </div>
+        <div>
+          <h3>Fingerboard</h3>
+          <div class="button-row"><button type="button" id="clearFingering">Clear fingering</button></div>
+        </div>
+      </div>
+
+      <div class="metric-grid">
+        <article class="metric wide"><span>Current strings</span><strong id="currentNotes">G3 · D4 · A4 · E5</strong></article>
+        <article class="metric"><span>Last action</span><strong id="lastAction">Ready</strong></article>
+        <article class="metric"><span>Bow</span><strong id="bowStatus">Move left or right</strong></article>
+        <article class="metric"><span>Technique</span><strong id="techniqueStatus">Ready</strong></article>
+        <article class="metric"><span>Intonation</span><strong id="intonationStatus">Assisted</strong></article>
+        <article class="metric"><span>Audio</span><strong id="audioStatus">Locked</strong></article>
+      </div>
+
+      <div class="meter-block">
+        <div class="meter-label"><span>Output signal</span><span>Live bowed mix</span></div>
+        <div id="meter" role="meter" aria-label="Audio output level" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><div id="level"></div></div>
+      </div>
+
+      <div id="report" class="report" aria-live="polite">
+        Assisted intonation snaps to semitone centres. Switch to Free pitch for continuous slides and finger vibrato. Two simultaneous bow touches can play independent strings, while a touch near a lane boundary bows adjacent strings together.
+      </div>
+    </section>
+
+    <footer>
+      <span>Standard violin tuning: G3 D4 A4 E5</span>
+      <span>Phase 1: continuous fingering, slides, vibrato, bow direction, bow speed, double stops and pizzicato</span>
+    </footer>
+  </main>
+
+  <script type="module" src="violin.js"></script>
+</body>
+</html>
